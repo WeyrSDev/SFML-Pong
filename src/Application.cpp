@@ -6,20 +6,36 @@ Application::Application()
   , mPlayer( { 20.f, 100.f } )
   , mMoveUp( false )
   , mMoveDown( false )
+  , mFpsDisplay()
+  , mTimeStep( sf::seconds( 1.f / 60.f ) )
+  , mPlayerSpeed( 200.f )
 {
-  auto playerBounds = mPlayer.getLocalBounds();
+  mWindow.setKeyRepeatEnabled( false );
+  mWindow.setFramerateLimit( 200u );
+
   sf::Vector2f center{ static_cast<float>( mWindow.getSize().x ) / 2.f,
                        static_cast<float>( mWindow.getSize().y ) / 2.f };
-  mPlayer.setFillColor( sf::Color::Green );  
-  mPlayer.setOrigin( playerBounds.width / 2.f, playerBounds.height / 2.f );  
+  mPlayer.setFillColor( sf::Color::Green );
+  mPlayer.setOrigin( mPlayer.getSize() / 2.f );
   mPlayer.setPosition( center );
+
+  mFpsDisplay.setPosition( 10.f, 10.f );
 }
 
 void Application::run()
 {
+  sf::Clock appClock;
+  sf::Time timeSinceLastFrame{ sf::Time::Zero };
+
   while( mWindow.isOpen() ) {
+    sf::Time dt{ appClock.restart() };
+    timeSinceLastFrame += dt;
     handle();
-    update();
+    while( timeSinceLastFrame > mTimeStep ) {
+      timeSinceLastFrame -= mTimeStep;
+      update( mTimeStep );
+    }
+    mFpsDisplay.update( dt );
     render();
   }
 }
@@ -43,14 +59,26 @@ void Application::handle()
   }
 }
 
-void Application::update()
+void Application::update( const sf::Time dt )
 {
+  auto playerMove = mPlayerSpeed * dt.asSeconds();
   if( mMoveUp ) {
-    mPlayer.move( 0.f, -1.f );
+    auto topPlayerYBound = mPlayer.getGlobalBounds().top;
+    if( topPlayerYBound - playerMove <= 0.f ) {
+      mPlayer.move( 0.f, -topPlayerYBound );
+    } else {
+      mPlayer.move( 0.f, -playerMove );
+    }    
     mMoveUp = false;
   }
   if( mMoveDown ) {
-    mPlayer.move( 0.f, 1.f );
+    auto botPlayerYBound = mPlayer.getGlobalBounds().top + mPlayer.getGlobalBounds().height;
+    auto botYDistance = static_cast<float>( mWindow.getSize().y ) - botPlayerYBound;
+    if( botPlayerYBound >= static_cast<float>( mWindow.getSize().y ) ) {
+      mPlayer.move( 0.f, botYDistance );
+    } else {
+      mPlayer.move( 0.f, playerMove );
+    }
     mMoveDown = false;
   }
 }
@@ -59,5 +87,6 @@ void Application::render()
 {
   mWindow.clear();
   mWindow.draw( mPlayer );
+  mWindow.draw( mFpsDisplay );
   mWindow.display();
 }
