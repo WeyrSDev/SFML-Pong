@@ -1,7 +1,14 @@
 #include <pong/Application.hpp>
+#include <iostream>
+#include <stdexcept>
 
 int main()
 {
-  Application app;
-  app.run();
+  try {
+    Application app;
+    app.run();
+  } catch( const std::exception& exc ) {
+    std::cout << exc.what() << std::endl;
+    return EXIT_FAILURE;
+  }
 }

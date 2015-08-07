@@ -10,16 +10,16 @@
 class FpsDisplay : public sf::Drawable, public sf::Transformable
 {
 public:
-                FpsDisplay( );
-  void          update( sf::Time dt );
+               FpsDisplay( );
+  void         update( sf::Time dt );
 
 private:
-  virtual void  draw( sf::RenderTarget& target, sf::RenderStates states ) const;
-  sf::Font      mFont;
-  sf::Text      mFpsText;
-  std::size_t   mFrames;
-  std::size_t   mFps;
-  sf::Time      mFpsTime;
+  virtual void draw( sf::RenderTarget& target, sf::RenderStates states ) const;
+  sf::Font     mFont;
+  sf::Text     mFpsText;
+  std::size_t  mFrames;
+  std::size_t  mFps;
+  sf::Time     mFpsTime;
 };
 
 #endif

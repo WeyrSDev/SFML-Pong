@@ -2,23 +2,14 @@
 #include <SFML/Window/Event.hpp>
 
 Application::Application()
-  : mWindow( { 800, 600 }, "Pong Tutorial 1", sf::Style::Close )
-  , mPlayer( { 20.f, 100.f } )
-  , mMoveUp( false )
-  , mMoveDown( false )
+  : mWindow( { 800, 600 }, "Pong for #1GAM", sf::Style::Close )
   , mFpsDisplay()
   , mTimeStep( sf::seconds( 1.f / 60.f ) )
-  , mPlayerSpeed( 200.f )
+  , mContext( mWindow )
+  , mWorld( mContext )
 {
   mWindow.setKeyRepeatEnabled( false );
   mWindow.setFramerateLimit( 200u );
-
-  sf::Vector2f center{ static_cast<float>( mWindow.getSize().x ) / 2.f,
-                       static_cast<float>( mWindow.getSize().y ) / 2.f };
-  mPlayer.setFillColor( sf::Color::Green );
-  mPlayer.setOrigin( mPlayer.getSize() / 2.f );
-  mPlayer.setPosition( center );
-
   mFpsDisplay.setPosition( 10.f, 10.f );
 }
 
@@ -30,19 +21,19 @@ void Application::run()
   while( mWindow.isOpen() ) {
     sf::Time dt{ appClock.restart() };
     timeSinceLastFrame += dt;
-    handle();
+    handleEvents();
     while( timeSinceLastFrame > mTimeStep ) {
       timeSinceLastFrame -= mTimeStep;
       update( mTimeStep );
     }
     mFpsDisplay.update( dt );
-    render();
+    draw();
   }
 }
 
 // end public interface
 
-void Application::handle()
+void Application::handleEvents()
 {
   sf::Event event;
   while( mWindow.pollEvent( event ) ) {
@@ -51,42 +42,18 @@ void Application::handle()
     }    
   }
 
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) ) {
-    mMoveUp = true;
-  }
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) ) {
-    mMoveDown = true;
-  }
+  mWorld.handleEvents( event );
 }
 
 void Application::update( const sf::Time dt )
 {
-  auto playerMove = mPlayerSpeed * dt.asSeconds();
-  if( mMoveUp ) {
-    auto topPlayerYBound = mPlayer.getGlobalBounds().top;
-    if( topPlayerYBound - playerMove <= 0.f ) {
-      mPlayer.move( 0.f, -topPlayerYBound );
-    } else {
-      mPlayer.move( 0.f, -playerMove );
-    }    
-    mMoveUp = false;
-  }
-  if( mMoveDown ) {
-    auto botPlayerYBound = mPlayer.getGlobalBounds().top + mPlayer.getGlobalBounds().height;
-    auto botYDistance = static_cast<float>( mWindow.getSize().y ) - botPlayerYBound;
-    if( botPlayerYBound >= static_cast<float>( mWindow.getSize().y ) ) {
-      mPlayer.move( 0.f, botYDistance );
-    } else {
-      mPlayer.move( 0.f, playerMove );
-    }
-    mMoveDown = false;
-  }
+  mWorld.update( dt );
 }
 
-void Application::render()
+void Application::draw()
 {
   mWindow.clear();
-  mWindow.draw( mPlayer );
+  mWorld.draw();
   mWindow.draw( mFpsDisplay );
   mWindow.display();
 }

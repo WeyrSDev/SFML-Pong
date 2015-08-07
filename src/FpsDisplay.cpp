@@ -8,7 +8,7 @@ FpsDisplay::FpsDisplay()
   , mFps( 0 )
   , mFpsTime( sf::Time::Zero )
 {
-  if( !mFont.loadFromFile( "../media/LiberationMono-Regular.ttf " ) ) {
+  if( !mFont.loadFromFile( "../media/fonts/LiberationMono-Regular.ttf " ) ) {
     throw std::runtime_error( "" );
   }
 
