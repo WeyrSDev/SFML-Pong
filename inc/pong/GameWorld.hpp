@@ -16,8 +16,13 @@ public:
   void handleEvents( const sf::Event& event );
   void update( sf::Time dt );
   void draw();
+
 private:
+  void setScoreString();
+  void resetGameBall();
+
   Context mContext;
+  sf::Vector2f mWinSize;
   sf::RectangleShape mPlayer;
   sf::RectangleShape mEnemy;
   sf::CircleShape mGameBall;
@@ -27,7 +32,15 @@ private:
   int mBallAngle;
   float mBallStartSpeed;
   float mBallSpeed;
+  float mBallAcceleration;
   float mEnemySpeed;
+  unsigned int mPlayerScore;
+  unsigned int mEnemyScore;
+  sf::Font mFont;
+  sf::Text mScoreText;
+  bool mStopGameBall;
+  bool mRestartGameBall;
+  sf::Time mGameTime;
 };
 
 #endif

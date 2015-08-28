@@ -24,12 +24,13 @@ namespace util
   float length( sf::Vector2f vector );
 
   // normalizes a vector to length=1, also called unit vector
-  sf::Vector2f normalize( sf::Vector2f vector );
+  sf::Vector2f normalizeVector( sf::Vector2f vector );
 
   // convert a polar angle to a 2D vector, angle must be in radians
   sf::Vector2f toVector( float angle );
 
-
+  // normalize an angle to be always between 0 and 360 degree
+  int normalizeAngle( int angle );
 
 #include "Utility.inl"
 
