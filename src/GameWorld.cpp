@@ -26,7 +26,7 @@ GameWorld::GameWorld( const Context& context )
   , mGameTime( sf::Time::Zero )
 {
   mWinSize = { static_cast<float>( context.window->getSize().x ),
-    static_cast<float>( context.window->getSize().y ) };
+               static_cast<float>( context.window->getSize().y ) };
   mPlayer.setFillColor( sf::Color::Green );
   mPlayer.setOrigin( mPlayer.getSize() / 2.f );
   mPlayer.setPosition( mPlayer.getOrigin().x, mWinSize.y / 2.f );
@@ -58,11 +58,14 @@ void GameWorld::handleEvents( const sf::Event& event )
   if( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) ) {
     mMoveDown = true; // generate move down command
   }
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::F1 ) ) {    
-    mStopGameBall = true; // generate stop ball command
-  }
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::F2 ) ) {    
-    mRestartGameBall = true; // generate restart ball command
+
+  if( event.type == sf::Event::KeyPressed ) {
+    if( event.key.code == sf::Keyboard::F1 ) {
+      mStopGameBall = true; // generate stop ball command
+    }
+    if( event.key.code == sf::Keyboard::F2 ) {
+      mRestartGameBall = true; // generate restart ball command
+    }
   }
 }
 
@@ -82,6 +85,7 @@ void GameWorld::update( const sf::Time dt )
   if( mRestartGameBall ) {
     resetGameBall();
     mRestartGameBall = false;
+    return;
   }
 
   auto vector = util::toVector( util::degToRad( static_cast<float>( mBallAngle ) ) );
