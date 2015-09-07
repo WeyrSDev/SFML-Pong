@@ -1,39 +1,56 @@
 #include <pong/Application.hpp>
+#include <pong/TitleState.hpp>
+#include <pong/GameState.hpp>
+#include <pong/MenuState.hpp>
 #include <SFML/Window/Event.hpp>
 
 Application::Application()
   : mWindow( { 800, 600 }, "Pong for #1GAM", sf::Style::Close )
   , mFpsDisplay()
+  , mTextures()
+  , mFonts()
+  , mContext( mWindow, mTextures, mFonts )
+  , mStack( mContext )
   , mTimeStep( sf::seconds( 1.f / 60.f ) )
-  , mContext( mWindow )
-  , mWorld( mContext )
 {
   mWindow.setKeyRepeatEnabled( false );
   mWindow.setFramerateLimit( 200u );
   mFpsDisplay.setPosition( 10.f, 10.f );
+
+  mFonts.load( Fonts::GREENSCREEN, "../media/fonts/Greenscreen.ttf" );
+  mTextures.load( Textures::TITLE_BG, "../media/gfx/title-bg.png" );
+
+  mStack.registerState<TitleState>( States::TITLE );
+  mStack.registerState<MenuState>( States::MENU );
+  mStack.registerState<GameState>( States::GAME );
+  mStack.pushState( States::TITLE );
 }
 
 void Application::run()
 {
   sf::Clock appClock;
-  sf::Time timeSinceLastFrame{ sf::Time::Zero };
+  sf::Time timeSinceLastUpdate{ sf::Time::Zero };
 
   while( mWindow.isOpen() ) {
     sf::Time dt{ appClock.restart() };
-    timeSinceLastFrame += dt;
-    handleEvents();
-    while( timeSinceLastFrame > mTimeStep ) {
-      timeSinceLastFrame -= mTimeStep;
+    timeSinceLastUpdate += dt;
+    handleInput();
+    while( timeSinceLastUpdate > mTimeStep ) {
+      timeSinceLastUpdate -= mTimeStep;
       update( mTimeStep );
     }
     mFpsDisplay.update( dt );
-    draw();
+    render();
+
+    if( mStack.isEmpty() ) {
+      mWindow.close();
+    }
   }
 }
 
 // end public interface
 
-void Application::handleEvents()
+void Application::handleInput()
 {
   sf::Event event;
   while( mWindow.pollEvent( event ) ) {
@@ -41,19 +58,18 @@ void Application::handleEvents()
       mWindow.close();
     }    
   }
-
-  mWorld.handleEvents( event );
+  mStack.handleInput( event );
 }
 
 void Application::update( const sf::Time dt )
 {
-  mWorld.update( dt );
+  mStack.update( dt );
 }
 
-void Application::draw()
+void Application::render()
 {
   mWindow.clear();
-  mWorld.draw();
+  mStack.render();
   mWindow.draw( mFpsDisplay );
   mWindow.display();
 }

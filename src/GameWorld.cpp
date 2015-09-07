@@ -1,5 +1,8 @@
 #include <pong/GameWorld.hpp>
 #include <pong/Utility.hpp>
+#include <pong/Context.hpp>
+#include <pong/ResourceIdentifiers.hpp>
+#include <pong/ResourceCache.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <iostream>
 
@@ -19,7 +22,6 @@ GameWorld::GameWorld( const Context& context )
   , mEnemySpeed( 200.f )
   , mPlayerScore( 0u )
   , mEnemyScore( 0u )
-  , mFont()
   , mScoreText()
   , mStopGameBall( false )
   , mRestartGameBall( false )
@@ -39,10 +41,7 @@ GameWorld::GameWorld( const Context& context )
   mGameBall.setOrigin( mGameBall.getRadius(), mGameBall.getRadius() );
   resetGameBall();
 
-  if( !mFont.loadFromFile( "../media/fonts/Greenscreen.ttf" ) ) {
-    throw std::runtime_error( "" );
-  }
-  mScoreText.setFont( mFont );
+  mScoreText.setFont( mContext.fonts->get( Fonts::GREENSCREEN ) );
   mScoreText.setCharacterSize( 30u );
   mScoreText.setColor( sf::Color::Green );
   setScoreString();
@@ -50,7 +49,7 @@ GameWorld::GameWorld( const Context& context )
   mScoreText.setPosition( mWinSize.x / 2.f, mScoreText.getOrigin().y + 5.f );
 }
 
-void GameWorld::handleEvents( const sf::Event& event )
+void GameWorld::handleInput( const sf::Event& event )
 {
   if( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) ) {
     mMoveUp = true; // generate move up command
@@ -73,7 +72,7 @@ void GameWorld::update( const sf::Time dt )
 {
   mGameTime += dt; // count the elapsed time of the played ball
 
-  if( mGameTime < sf::seconds( 3.0f ) ) {
+  if( mGameTime < sf::seconds( 2.0f ) ) {
     return; // if not 3 seconds have passed immediatly cancel update
   }
 
@@ -208,7 +207,7 @@ void GameWorld::update( const sf::Time dt )
   }
 }
 
-void GameWorld::draw()
+void GameWorld::render()
 {
   sf::RenderWindow& window = *mContext.window;
   window.draw( mScoreText );

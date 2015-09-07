@@ -14,7 +14,7 @@ public:
   void         update( sf::Time dt );
 
 private:
-  virtual void draw( sf::RenderTarget& target, sf::RenderStates states ) const;
+  virtual void draw( sf::RenderTarget& target, sf::RenderStates states ) const override;
   sf::Font     mFont;
   sf::Text     mFpsText;
   std::size_t  mFrames;

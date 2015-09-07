@@ -3,24 +3,29 @@
 
 #include "FpsDisplay.hpp"
 #include "Context.hpp"
-#include "GameWorld.hpp"
+#include "StateStack.hpp"
+#include "ResourceCache.hpp"
+#include "ResourceIdentifiers.hpp"
 #include <SFML/Graphics/RenderWindow.hpp>
 
 class Application
 {
 public:
-  Application();
-  void run();
-private:
-  void handleEvents();
-  void update( sf::Time dt );
-  void draw();
+                    Application();
+  void              run();
 
-  sf::RenderWindow mWindow;
-  FpsDisplay mFpsDisplay;
-  sf::Time mTimeStep;
-  Context mContext;
-  GameWorld mWorld;
+private:
+  void              handleInput();
+  void              update( sf::Time dt );
+  void              render();
+
+  sf::RenderWindow  mWindow;
+  FpsDisplay        mFpsDisplay;
+  TextureCache      mTextures;
+  FontCache         mFonts;
+  Context           mContext;
+  StateStack        mStack;
+  sf::Time          mTimeStep;
 };
 
 #endif

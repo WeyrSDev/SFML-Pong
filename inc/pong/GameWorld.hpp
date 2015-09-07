@@ -13,9 +13,9 @@ class GameWorld
 {
 public:
   explicit GameWorld( const Context& context );
-  void handleEvents( const sf::Event& event );
+  void handleInput( const sf::Event& event );
   void update( sf::Time dt );
-  void draw();
+  void render();
 
 private:
   void setScoreString();
@@ -36,7 +36,6 @@ private:
   float mEnemySpeed;
   unsigned int mPlayerScore;
   unsigned int mEnemyScore;
-  sf::Font mFont;
   sf::Text mScoreText;
   bool mStopGameBall;
   bool mRestartGameBall;
