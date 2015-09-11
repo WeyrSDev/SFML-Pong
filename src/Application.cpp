@@ -2,6 +2,8 @@
 #include <pong/TitleState.hpp>
 #include <pong/GameState.hpp>
 #include <pong/MenuState.hpp>
+#include <pong/PauseState.hpp>
+#include <pong/GameoverState.hpp>
 #include <SFML/Window/Event.hpp>
 
 Application::Application()
@@ -9,7 +11,8 @@ Application::Application()
   , mFpsDisplay()
   , mTextures()
   , mFonts()
-  , mContext( mWindow, mTextures, mFonts )
+  , mBBoard()
+  , mContext( mWindow, mTextures, mFonts, mBBoard )
   , mStack( mContext )
   , mTimeStep( sf::seconds( 1.f / 60.f ) )
 {
@@ -23,6 +26,8 @@ Application::Application()
   mStack.registerState<TitleState>( States::TITLE );
   mStack.registerState<MenuState>( States::MENU );
   mStack.registerState<GameState>( States::GAME );
+  mStack.registerState<PauseState>( States::PAUSE );
+  mStack.registerState<GameoverState>( States::GAMEOVER );
   mStack.pushState( States::TITLE );
 }
 

@@ -1,31 +1,32 @@
-#ifndef MENUSTATE_HPP
-#define MENUSTATE_HPP
+#ifndef PAUSESTATE_HPP
+#define PAUSESTATE_HPP
 
 #include "State.hpp"
 #include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <vector>
+#include <SFML/Graphics/RectangleShape.hpp>
 
-class MenuState : public State
+class PauseState : public State
 {
 public:
-  explicit MenuState( StateStack& stack );
+  explicit PauseState( StateStack& stack );
+
   virtual bool handleInput( const sf::Event& event ) override;
   virtual bool update( sf::Time dt ) override;
   virtual void render() override;
-
 private:
   enum class MenuOptions
   {
-    PLAY,
+    RESUME,
     EXIT,
   };
 
   void updateMenuText();
 
-  sf::Sprite mBackgroundSprite;
+  sf::RectangleShape mBackgroundShape;
+  sf::Text mPauseText;
   std::vector<sf::Text> mMenuOptions;
-  std::size_t mMenuIndex;  
+  std::size_t mMenuIndex;
 };
+
 
 #endif

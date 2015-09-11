@@ -205,6 +205,15 @@ void GameWorld::update( const sf::Time dt )
     setScoreString();
     resetGameBall();
   }
+
+  // check for win condition and set flags in blackboard
+  if( mPlayerScore >= 1 && mPlayerScore >= mEnemyScore  ) {
+    mContext.blackboard->gameOver = true;
+    mContext.blackboard->playerWon = true;
+  } else if( mEnemyScore >= 1 && mEnemyScore >= mPlayerScore ) {
+    mContext.blackboard->gameOver = true;
+    mContext.blackboard->playerWon = false;
+  }
 }
 
 void GameWorld::render()

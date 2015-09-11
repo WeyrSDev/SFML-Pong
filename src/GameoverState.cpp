@@ -1,43 +1,59 @@
-#include <pong/MenuState.hpp>
+#include <pong/GameoverState.hpp>
 #include <pong/Context.hpp>
-#include <pong/ResourceIdentifiers.hpp>
 #include <pong/ResourceCache.hpp>
 #include <pong/Utility.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
-MenuState::MenuState( StateStack& stack )
+GameoverState::GameoverState( StateStack& stack )
   : State( stack )
   , mBackgroundSprite()
+  , mGameoverText()
   , mMenuOptions()
   , mMenuIndex( 0 )
 {
+  mBackgroundSprite.setTexture( getContext()->textures->get( Textures::TITLE_BG ) );
+  auto winSize = sf::Vector2f{ static_cast<float>( getContext()->window->getSize().x ),
+                               static_cast<float>( getContext()->window->getSize().y ) };
+
+  mGameoverText.setFont( getContext()->fonts->get( Fonts::GREENSCREEN ) );
+  if( getContext()->blackboard->playerWon ) {
+    mGameoverText.setString( "YOU HAVE WON, CONGRATULATIONS!" );
+  } else {
+    mGameoverText.setString( "SORRY, YOU HAVE LOST!" );
+  }
+  util::centerOrigin( mGameoverText );
+  mGameoverText.setPosition( winSize.x / 2.f, 60.f );
+  
   const auto& font = getContext()->fonts->get( Fonts::GREENSCREEN );
-  sf::Text playOption;
-  playOption.setFont( font );
-  playOption.setString( "PLAY" );
+
+  sf::Text playOption( "PLAY AGAIN", font );
   util::centerOrigin( playOption );
-  playOption.setPosition( getContext()->window->getView().getSize() / 2.f - sf::Vector2f( 0.f, 20.f ) );
+  playOption.setPosition( winSize / 2.f - sf::Vector2f( 0.f, 20.f ) );
   mMenuOptions.push_back( playOption );
 
-  sf::Text exitOption;
-  exitOption.setFont( font );
-  exitOption.setString( "EXIT" );
+  sf::Text exitOption( "EXIT TO MENU", font );
   util::centerOrigin( exitOption );
   exitOption.setPosition( playOption.getPosition() + sf::Vector2f( 0.f, 40.f ) );
   mMenuOptions.push_back( exitOption );
 
-  mBackgroundSprite.setTexture( getContext()->textures->get( Textures::TITLE_BG ) );
+  sf::Text quitOption( "EXIT GAME", font );
+  util::centerOrigin( quitOption );
+  quitOption.setPosition( exitOption.getPosition() + sf::Vector2f( 0.f, 40.f ) );
+  mMenuOptions.push_back( quitOption );
 
   updateMenuText();
 }
 
-bool MenuState::handleInput( const sf::Event& event )
+bool GameoverState::handleInput( const sf::Event& event )
 {
   if( event.type == sf::Event::KeyReleased ) {
     if( event.key.code == sf::Keyboard::Return ) {
       if( mMenuIndex == static_cast<std::size_t>( MenuOptions::PLAY ) ) {
         requestStackPop();
         requestStackPush( States::GAME );
+      } else if( mMenuIndex == static_cast<std::size_t>( MenuOptions::MENU ) ) {
+        requestStackPop();
+        requestStackPush( States::MENU );
       } else if( mMenuIndex == static_cast<std::size_t>( MenuOptions::EXIT ) ) {
         requestStackClear();
       }
@@ -61,20 +77,19 @@ bool MenuState::handleInput( const sf::Event& event )
       updateMenuText();
     }
   }
-
   return true;
 }
 
-bool MenuState::update( const sf::Time dt )
+bool GameoverState::update( const sf::Time dt )
 {
   return true;
 }
 
-void MenuState::render()
+void GameoverState::render()
 {
   sf::RenderWindow& window = *getContext()->window;
-  window.setView( window.getDefaultView() );
   window.draw( mBackgroundSprite );
+  window.draw( mGameoverText );
   for( const auto& option : mMenuOptions ) {
     window.draw( option );
   }
@@ -82,7 +97,7 @@ void MenuState::render()
 
 // end public interface
 
-void MenuState::updateMenuText()
+void GameoverState::updateMenuText()
 {
   if( mMenuOptions.empty() ) {
     return;
