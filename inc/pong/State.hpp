@@ -28,6 +28,9 @@ protected:
 
 private:
   StateStack*   mStack;
+
+  State( const State& ) = delete;
+  State& operator=( const State& ) = delete;
 };
 
 #endif

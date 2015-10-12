@@ -15,16 +15,16 @@ GameoverState::GameoverState( StateStack& stack )
   auto winSize = sf::Vector2f{ static_cast<float>( getContext()->window->getSize().x ),
                                static_cast<float>( getContext()->window->getSize().y ) };
 
-  mGameoverText.setFont( getContext()->fonts->get( Fonts::GREENSCREEN ) );
+  mGameoverText.setFont( getContext()->fonts->get( Fonts::SDS_8BIT ) );
   if( getContext()->blackboard->playerWon ) {
-    mGameoverText.setString( "YOU HAVE WON, CONGRATULATIONS!" );
+    mGameoverText.setString( "CONGRATULATIONS,\nYOU HAVE WON!" );
   } else {
     mGameoverText.setString( "SORRY, YOU HAVE LOST!" );
   }
   util::centerOrigin( mGameoverText );
   mGameoverText.setPosition( winSize.x / 2.f, 60.f );
   
-  const auto& font = getContext()->fonts->get( Fonts::GREENSCREEN );
+  const auto& font = getContext()->fonts->get( Fonts::SDS_8BIT );
 
   sf::Text playOption( "PLAY AGAIN", font );
   util::centerOrigin( playOption );

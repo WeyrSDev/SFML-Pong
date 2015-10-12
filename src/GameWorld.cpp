@@ -26,6 +26,7 @@ GameWorld::GameWorld( const Context& context )
   , mStopGameBall( false )
   , mRestartGameBall( false )
   , mGameTime( sf::Time::Zero )
+  , mWinScore( 5u )
 {
   mWinSize = { static_cast<float>( context.window->getSize().x ),
                static_cast<float>( context.window->getSize().y ) };
@@ -41,7 +42,7 @@ GameWorld::GameWorld( const Context& context )
   mGameBall.setOrigin( mGameBall.getRadius(), mGameBall.getRadius() );
   resetGameBall();
 
-  mScoreText.setFont( mContext.fonts->get( Fonts::GREENSCREEN ) );
+  mScoreText.setFont( mContext.fonts->get( Fonts::SDS_8BIT ) );
   mScoreText.setCharacterSize( 30u );
   mScoreText.setColor( sf::Color::Green );
   setScoreString();
@@ -73,7 +74,7 @@ void GameWorld::update( const sf::Time dt )
   mGameTime += dt; // count the elapsed time of the played ball
 
   if( mGameTime < sf::seconds( 2.0f ) ) {
-    return; // if not 3 seconds have passed immediatly cancel update
+    return; // if not 2 seconds have passed immediatly cancel update
   }
 
   if( mStopGameBall ) {
@@ -207,10 +208,10 @@ void GameWorld::update( const sf::Time dt )
   }
 
   // check for win condition and set flags in blackboard
-  if( mPlayerScore >= 1 && mPlayerScore >= mEnemyScore  ) {
+  if( mPlayerScore >= mWinScore && mPlayerScore >= mEnemyScore  ) {
     mContext.blackboard->gameOver = true;
     mContext.blackboard->playerWon = true;
-  } else if( mEnemyScore >= 1 && mEnemyScore >= mPlayerScore ) {
+  } else if( mEnemyScore >= mWinScore && mEnemyScore >= mPlayerScore ) {
     mContext.blackboard->gameOver = true;
     mContext.blackboard->playerWon = false;
   }

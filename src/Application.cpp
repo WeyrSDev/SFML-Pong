@@ -21,6 +21,9 @@ Application::Application()
   mFpsDisplay.setPosition( 10.f, 10.f );
 
   mFonts.load( Fonts::GREENSCREEN, "../media/fonts/Greenscreen.ttf" );
+  mFonts.load( Fonts::PRESS_START_2P, "../media/fonts/PressStart2P-Regular.ttf" );
+  mFonts.load( Fonts::MANASPACE, "../media/fonts/Manaspace.ttf" );
+  mFonts.load( Fonts::SDS_8BIT, "../media/fonts/SDS_8BIT.ttf" );
   mTextures.load( Textures::TITLE_BG, "../media/gfx/title-bg.png" );
 
   mStack.registerState<TitleState>( States::TITLE );

@@ -8,22 +8,38 @@
 MenuState::MenuState( StateStack& stack )
   : State( stack )
   , mBackgroundSprite()
+  , mTitle()
   , mMenuOptions()
   , mMenuIndex( 0 )
 {
-  const auto& font = getContext()->fonts->get( Fonts::GREENSCREEN );
-  sf::Text playOption;
-  playOption.setFont( font );
-  playOption.setString( "PLAY" );
+  const auto& font = getContext()->fonts->get( Fonts::SDS_8BIT );
+  auto winSize = getContext()->window->getView().getSize();
+
+  mTitle.setFont( font );
+  mTitle.setString( "P O N G" );
+  mTitle.setCharacterSize( 80u );
+  mTitle.setColor( sf::Color::Green );
+  util::centerOrigin( mTitle );  
+  mTitle.setPosition( winSize.x / 2.f, 100.f );
+
+  sf::Text playOption( "PLAY", font );
   util::centerOrigin( playOption );
-  playOption.setPosition( getContext()->window->getView().getSize() / 2.f - sf::Vector2f( 0.f, 20.f ) );
+  playOption.setPosition( winSize / 2.f - sf::Vector2f( 0.f, 75.f ) );
   mMenuOptions.push_back( playOption );
 
-  sf::Text exitOption;
-  exitOption.setFont( font );
-  exitOption.setString( "EXIT" );
+  sf::Text settingsOption( "SETTINGS", font );
+  util::centerOrigin( settingsOption );
+  settingsOption.setPosition( playOption.getPosition() + sf::Vector2f( 0.f, 40.f ) );
+  mMenuOptions.push_back( settingsOption );
+
+  sf::Text creditsOption( "CREDITS", font );
+  util::centerOrigin( creditsOption );
+  creditsOption.setPosition( settingsOption.getPosition() + sf::Vector2f( 0.f, 40.f ) );
+  mMenuOptions.push_back( creditsOption );
+
+  sf::Text exitOption("EXIT", font);
   util::centerOrigin( exitOption );
-  exitOption.setPosition( playOption.getPosition() + sf::Vector2f( 0.f, 40.f ) );
+  exitOption.setPosition( creditsOption.getPosition() + sf::Vector2f( 0.f, 40.f ) );
   mMenuOptions.push_back( exitOption );
 
   mBackgroundSprite.setTexture( getContext()->textures->get( Textures::TITLE_BG ) );
@@ -74,7 +90,10 @@ void MenuState::render()
 {
   sf::RenderWindow& window = *getContext()->window;
   window.setView( window.getDefaultView() );
+  
   window.draw( mBackgroundSprite );
+  window.draw( mTitle );
+
   for( const auto& option : mMenuOptions ) {
     window.draw( option );
   }

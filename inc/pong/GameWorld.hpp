@@ -40,6 +40,7 @@ private:
   bool mStopGameBall;
   bool mRestartGameBall;
   sf::Time mGameTime;
+  unsigned int mWinScore;
 };
 
 #endif

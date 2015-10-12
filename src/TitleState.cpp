@@ -14,24 +14,25 @@ TitleState::TitleState( StateStack& stack )
   , mTextEffectTime( sf::seconds( 1.f ) )
   , mFrameTime( sf::Time::Zero )
 {
-  const auto& font = getContext()->fonts->get( Fonts::GREENSCREEN );
+  const auto& font = getContext()->fonts->get( Fonts::SDS_8BIT );
+  auto winSize = getContext()->window->getView().getSize();
 
   mBackgroundSprite.setTexture( getContext()->textures->get( Textures::TITLE_BG ) );
   
   mTitle.setFont( font );
   mTitle.setString( "P O N G" );
-  mTitle.setCharacterSize( 50u );
+  mTitle.setCharacterSize( 80u );
   mTitle.setColor( sf::Color::Green );
   util::centerOrigin( mTitle );
-  auto center = getContext()->window->getSize() / 2u;
-  mTitle.setPosition( static_cast<float>( center.x ), 200.f );
+  
+  mTitle.setPosition( winSize.x / 2.f, 100.f );
 
   mText.setFont( font );
   mText.setString( "< Press any key to start >" );
   mText.setCharacterSize( 24u );
   mText.setColor( sf::Color::Green );
   util::centerOrigin( mText );
-  mText.setPosition( static_cast<float>( center.x ), mTitle.getPosition().y + 100.f );
+  mText.setPosition( winSize / 2.f );
 }
 
 bool TitleState::handleInput( const sf::Event& event )
@@ -40,6 +41,7 @@ bool TitleState::handleInput( const sf::Event& event )
     requestStackPop();
     requestStackPush( States::MENU );
   }
+
   return true;
 }
 

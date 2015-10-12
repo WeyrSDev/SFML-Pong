@@ -18,14 +18,17 @@ private:
   enum class MenuOptions
   {
     PLAY,
+    SETTINGS,
+    CREDITS,
     EXIT,
   };
 
   void updateMenuText();
 
   sf::Sprite mBackgroundSprite;
+  sf::Text mTitle;
   std::vector<sf::Text> mMenuOptions;
-  std::size_t mMenuIndex;  
+  std::size_t mMenuIndex;
 };
 
 #endif

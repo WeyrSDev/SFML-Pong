@@ -17,7 +17,7 @@ PauseState::PauseState( StateStack& stack )
   mBackgroundShape.setSize( winSize );
   mBackgroundShape.setFillColor( sf::Color{ 0, 0, 0, 150 } ); // half transparent black
 
-  const auto& font = getContext()->fonts->get( Fonts::GREENSCREEN );
+  const auto& font = getContext()->fonts->get( Fonts::SDS_8BIT );
 
   mPauseText.setFont( font );
   mPauseText.setString( "GAME PAUSED" );
