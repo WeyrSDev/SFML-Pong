@@ -1,8 +1,7 @@
-#include <pong/GameWorld.hpp>
-#include <pong/Utility.hpp>
-#include <pong/Context.hpp>
-#include <pong/ResourceIdentifiers.hpp>
-#include <pong/ResourceCache.hpp>
+#include "GameWorld.hpp"
+#include <engine/Utility.hpp>
+#include <engine/Context.hpp>
+#include <engine/ResourceCache.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <iostream>
 
@@ -42,7 +41,7 @@ GameWorld::GameWorld( const Context& context )
   mGameBall.setOrigin( mGameBall.getRadius(), mGameBall.getRadius() );
   resetGameBall();
 
-  mScoreText.setFont( mContext.fonts->get( Fonts::SDS_8BIT ) );
+  mScoreText.setFont( mContext.fonts->get( Fonts::C64_Pixel ) );
   mScoreText.setCharacterSize( 30u );
   mScoreText.setColor( sf::Color::Green );
   setScoreString();

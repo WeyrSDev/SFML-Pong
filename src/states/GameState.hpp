@@ -1,8 +1,8 @@
 #ifndef GAMESTATE_HPP
 #define GAMESTATE_HPP
 
-#include "State.hpp"
-#include "GameWorld.hpp"
+#include <engine/State.hpp>
+#include <game/GameWorld.hpp>
 
 class GameState : public State
 {

@@ -1,5 +1,5 @@
-#include <pong/GameState.hpp>
-#include <pong/StateStack.hpp>
+#include "GameState.hpp"
+#include <engine/StateStack.hpp>
 
 GameState::GameState( StateStack& stack )
   : State( stack )

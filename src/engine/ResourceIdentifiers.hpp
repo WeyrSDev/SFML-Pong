@@ -15,10 +15,8 @@ enum class Textures
 enum class Fonts
 {
   MONOSPACE,
-  GREENSCREEN,
-  MANASPACE,
-  PRESS_START_2P,
   SDS_8BIT,
+  C64_Pixel,
 };
 
 enum class Music

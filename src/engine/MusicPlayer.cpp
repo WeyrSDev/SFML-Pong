@@ -1,4 +1,4 @@
-#include <pong/MusicPlayer.hpp>
+#include "MusicPlayer.hpp"
 
 MusicPlayer::MusicPlayer()
   : mMusic()

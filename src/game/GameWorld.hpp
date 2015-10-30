@@ -1,7 +1,7 @@
 #ifndef GAMEWORLD_HPP
 #define GAMEWORLD_HPP
 
-#include "Context.hpp"
+#include <engine/Context.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/System/Time.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>

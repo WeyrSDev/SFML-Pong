@@ -1,12 +1,11 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
-#include "FpsDisplay.hpp"
-#include "Context.hpp"
-#include "StateStack.hpp"
-#include "ResourceCache.hpp"
-#include "ResourceIdentifiers.hpp"
-#include "Blackboard.hpp"
+#include <engine/FpsDisplay.hpp>
+#include <engine/Context.hpp>
+#include <engine/StateStack.hpp>
+#include <engine/ResourceCache.hpp>
+#include <engine/Blackboard.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 class Application

@@ -1,4 +1,4 @@
-#include <pong/Application.hpp>
+#include <game/Application.hpp>
 #include <iostream>
 #include <stdexcept>
 

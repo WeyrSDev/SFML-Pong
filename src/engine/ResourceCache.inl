@@ -1,6 +1,6 @@
 
 template <typename Resource, typename Identifier>
-void ResourceCache<Resource, Identifier>::load( Identifier id, const std::string& filename )
+void ResourceCache<Resource, Identifier>::load( Identifier id, const sf::String& filename )
 {
   // Create and load resource
   auto resource = std::make_unique<Resource>();
@@ -13,7 +13,7 @@ void ResourceCache<Resource, Identifier>::load( Identifier id, const std::string
 
 template <typename Resource, typename Identifier>
 template <typename Parameter>
-void ResourceCache<Resource, Identifier>::load( Identifier id, const std::string& filename, const Parameter& secondParam )
+void ResourceCache<Resource, Identifier>::load( Identifier id, const sf::String& filename, const Parameter& secondParam )
 {
   // Create and load resource
   auto resource = std::make_unique<Resource>();

@@ -1,5 +1,5 @@
-#include <pong/State.hpp>
-#include <pong/StateStack.hpp>
+#include "State.hpp"
+#include "StateStack.hpp"
 
 State::State( StateStack& stack )
   :mStack( &stack )

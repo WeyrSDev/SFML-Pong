@@ -1,4 +1,4 @@
-#include <pong/StateStack.hpp>
+#include "StateStack.hpp"
 #include <cassert>
 
 StateStack::StateStack( Context& context )

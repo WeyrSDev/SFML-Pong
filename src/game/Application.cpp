@@ -1,9 +1,9 @@
-#include <pong/Application.hpp>
-#include <pong/TitleState.hpp>
-#include <pong/GameState.hpp>
-#include <pong/MenuState.hpp>
-#include <pong/PauseState.hpp>
-#include <pong/GameoverState.hpp>
+#include <game/Application.hpp>
+#include <states/TitleState.hpp>
+#include <states/GameState.hpp>
+#include <states/MenuState.hpp>
+#include <states/PauseState.hpp>
+#include <states/GameoverState.hpp>
 #include <SFML/Window/Event.hpp>
 
 Application::Application()
@@ -20,10 +20,8 @@ Application::Application()
   mWindow.setFramerateLimit( 200u );
   mFpsDisplay.setPosition( 10.f, 10.f );
 
-  mFonts.load( Fonts::GREENSCREEN, "../media/fonts/Greenscreen.ttf" );
-  mFonts.load( Fonts::PRESS_START_2P, "../media/fonts/PressStart2P-Regular.ttf" );
-  mFonts.load( Fonts::MANASPACE, "../media/fonts/Manaspace.ttf" );
   mFonts.load( Fonts::SDS_8BIT, "../media/fonts/SDS_8BIT.ttf" );
+  mFonts.load( Fonts::C64_Pixel, "../media/fonts/C64-Pixel.ttf" );
   mTextures.load( Textures::TITLE_BG, "../media/gfx/title-bg.png" );
 
   mStack.registerState<TitleState>( States::TITLE );

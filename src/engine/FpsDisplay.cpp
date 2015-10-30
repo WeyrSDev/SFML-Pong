@@ -1,4 +1,4 @@
-#include <pong/FpsDisplay.hpp>
+#include "FpsDisplay.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
 FpsDisplay::FpsDisplay()

@@ -1,7 +1,7 @@
 #ifndef STATE_IDENTIFIERS_HPP
 #define STATE_IDENTIFIERS_HPP
 
-enum class States
+enum class States : unsigned int
 {
   NONE = 0,
   TITLE,

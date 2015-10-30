@@ -1,7 +1,8 @@
 #ifndef PAUSESTATE_HPP
 #define PAUSESTATE_HPP
 
-#include "State.hpp"
+#include <engine/State.hpp>
+#include <engine/TextMenu.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
@@ -14,18 +15,15 @@ public:
   virtual bool update( sf::Time dt ) override;
   virtual void render() override;
 private:
-  enum class MenuOptions
+  enum class MenuOption : unsigned int
   {
-    RESUME,
-    EXIT,
+    RESUME = 0u,
+    EXIT = 1u,
   };
-
-  void updateMenuText();
 
   sf::RectangleShape mBackgroundShape;
   sf::Text mPauseText;
-  std::vector<sf::Text> mMenuOptions;
-  std::size_t mMenuIndex;
+  TextMenu mMenu;
 };
 
 

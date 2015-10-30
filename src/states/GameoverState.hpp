@@ -1,10 +1,10 @@
 #ifndef GAMEOVERSTATE_HPP
 #define GAMEOVERSTATE_HPP
 
-#include "State.hpp"
+#include <engine/State.hpp>
+#include <engine/TextMenu.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Sprite.hpp>
-#include <vector>
 
 class GameoverState : public State
 {
@@ -15,19 +15,16 @@ public:
   void render() override;
 
 private:
-  enum class MenuOptions
+  enum class MenuOption : unsigned int
   {
-    PLAY,
-    MENU,
-    EXIT,
+    PLAY = 0u,
+    MENU = 1u,
+    EXIT = 2u,
   };
-
-  void updateMenuText();
 
   sf::Sprite mBackgroundSprite;
   sf::Text mGameoverText;
-  std::vector<sf::Text> mMenuOptions;
-  std::size_t mMenuIndex;
+  TextMenu mMenu;
 };
 
 #endif

@@ -1,9 +1,8 @@
 #ifndef STATESTACK_HPP
 #define STATESTACK_HPP
 
-#include <pong/Context.hpp>
-#include <pong/State.hpp>
-#include <SFML/System/NonCopyable.hpp>
+#include "Context.hpp"
+#include "State.hpp"
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include <vector>
@@ -11,7 +10,7 @@
 #include <functional>
 #include <utility>
 
-class StateStack : private sf::NonCopyable
+class StateStack
 {
 public:
   enum class Action
@@ -55,6 +54,9 @@ private:
   std::vector<PendingChange> mPendingChanges;
   Context* mContext;
   std::map<States, std::function<State::Ptr()>> mFactories;
+
+  StateStack( const StateStack& ) = delete;
+  StateStack& operator=( const StateStack& ) = delete;
 };
 
 

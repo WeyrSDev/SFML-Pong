@@ -1,7 +1,7 @@
 #ifndef TITLESTATE_HPP
 #define TITLESTATE_HPP
 
-#include "State.hpp"
+#include <engine/State.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 

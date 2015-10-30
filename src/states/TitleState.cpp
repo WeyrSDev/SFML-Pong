@@ -1,7 +1,7 @@
-#include <pong/TitleState.hpp>
-#include <pong/Context.hpp>
-#include <pong/ResourceCache.hpp>
-#include <pong/Utility.hpp>
+#include "TitleState.hpp"
+#include <engine/Context.hpp>
+#include <engine/ResourceCache.hpp>
+#include <engine/Utility.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <iostream>
 
@@ -14,7 +14,7 @@ TitleState::TitleState( StateStack& stack )
   , mTextEffectTime( sf::seconds( 1.f ) )
   , mFrameTime( sf::Time::Zero )
 {
-  const auto& font = getContext()->fonts->get( Fonts::SDS_8BIT );
+  const auto& font = getContext()->fonts->get( Fonts::C64_Pixel );
   auto winSize = getContext()->window->getView().getSize();
 
   mBackgroundSprite.setTexture( getContext()->textures->get( Textures::TITLE_BG ) );
