@@ -5,12 +5,14 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <iostream>
 
+///////////////////////////////////////////////////////////////////////////////
+
 TitleState::TitleState( StateStack& stack )
   : State( stack )
   , mBackgroundSprite()
   , mTitle()
   , mText()
-  , mShowText( false )
+  , mShowText( true )
   , mTextEffectTime( sf::seconds( 1.f ) )
   , mFrameTime( sf::Time::Zero )
 {
@@ -18,7 +20,7 @@ TitleState::TitleState( StateStack& stack )
   auto winSize = getContext()->window->getView().getSize();
 
   mBackgroundSprite.setTexture( getContext()->textures->get( Textures::TITLE_BG ) );
-  
+    
   mTitle.setFont( font );
   mTitle.setString( "P O N G" );
   mTitle.setCharacterSize( 80u );
@@ -35,6 +37,8 @@ TitleState::TitleState( StateStack& stack )
   mText.setPosition( winSize / 2.f );
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 bool TitleState::handleInput( const sf::Event& event )
 {
   if( event.type == sf::Event::KeyReleased ) {
@@ -44,6 +48,8 @@ bool TitleState::handleInput( const sf::Event& event )
 
   return true;
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 bool TitleState::update( const sf::Time dt )
 {
@@ -56,6 +62,8 @@ bool TitleState::update( const sf::Time dt )
   return true;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 void TitleState::render()
 {
   sf::RenderWindow& window = *getContext()->window;
@@ -65,3 +73,5 @@ void TitleState::render()
     window.draw( mText );
   }
 }
+
+///////////////////////////////////////////////////////////////////////////////

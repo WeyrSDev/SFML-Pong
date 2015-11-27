@@ -1,6 +1,8 @@
 #include "FpsDisplay.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
 
+///////////////////////////////////////////////////////////////////////////////
+
 FpsDisplay::FpsDisplay()
   : mFont()
   , mFpsText()
@@ -17,6 +19,8 @@ FpsDisplay::FpsDisplay()
   mFpsText.setString( "0 fps" );
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 void FpsDisplay::update( const sf::Time dt )
 {
   mFpsTime += dt;
@@ -30,8 +34,12 @@ void FpsDisplay::update( const sf::Time dt )
   }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 void FpsDisplay::draw( sf::RenderTarget& target, sf::RenderStates states ) const
 {
   states.transform *= getTransform();
   target.draw( mFpsText, states );
 }
+
+///////////////////////////////////////////////////////////////////////////////

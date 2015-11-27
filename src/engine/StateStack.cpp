@@ -1,12 +1,16 @@
 #include "StateStack.hpp"
 #include <cassert>
 
+///////////////////////////////////////////////////////////////////////////////
+
 StateStack::StateStack( Context& context )
   : mStates()
   , mPendingChanges()
   , mContext( &context )
   , mFactories()
 {}
+
+///////////////////////////////////////////////////////////////////////////////
 
 void StateStack::handleInput( const sf::Event& event )
 {
@@ -16,6 +20,8 @@ void StateStack::handleInput( const sf::Event& event )
   }
   applyPendingChanges();
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 void StateStack::update( const sf::Time dt )
 {
@@ -27,6 +33,8 @@ void StateStack::update( const sf::Time dt )
   applyPendingChanges();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 void StateStack::render()
 {
   for( const auto& state : mStates ) {
@@ -34,25 +42,35 @@ void StateStack::render()
   }
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 void StateStack::pushState( States id )
 {
   mPendingChanges.push_back( PendingChange( Action::PUSH, id ) );
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 void StateStack::popState()
 {
   mPendingChanges.push_back( PendingChange( Action::POP ) );
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 void StateStack::clearStates()
 {
   mPendingChanges.push_back( PendingChange( Action::CLEAR ) );
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 bool StateStack::isEmpty() const
 {
   return mStates.empty();
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 Context* StateStack::getContext() const
 {
@@ -60,6 +78,7 @@ Context* StateStack::getContext() const
 }
 
 // end public interface
+///////////////////////////////////////////////////////////////////////////////
 
 State::Ptr StateStack::createState( States id )
 {
@@ -68,6 +87,8 @@ State::Ptr StateStack::createState( States id )
 
   return found->second();
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 void StateStack::applyPendingChanges()
 {
@@ -89,3 +110,5 @@ void StateStack::applyPendingChanges()
 
   mPendingChanges.clear();
 }
+
+///////////////////////////////////////////////////////////////////////////////

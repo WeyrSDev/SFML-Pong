@@ -9,6 +9,6 @@ int main()
     app.run();
   } catch( const std::exception& exc ) {
     std::cout << exc.what() << std::endl;
-    return EXIT_FAILURE;
+    return -1;
   }
 }

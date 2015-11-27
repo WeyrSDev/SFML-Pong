@@ -20,9 +20,6 @@ public:
 private:
   void setScoreString();
   void resetGameBall();
-#ifdef _DEBUG
-  void setDebugInfo();
-#endif
 
   Context mContext;
   sf::Vector2f mWinSize;
@@ -35,22 +32,17 @@ private:
   int mBallAngle;
   float mBallStartSpeed;
   float mBallSpeed;
-  float mOldBallSpeed;
+  float mPrevBallSpeed;
   float mBallAcceleration;
   float mEnemySpeed;
   unsigned int mPlayerScore;
   unsigned int mEnemyScore;
   sf::Text mScoreText;
+  bool mToggleBallMove;
   sf::Time mGameTime;
   unsigned int mWinScore;
-  
-#ifdef _DEBUG
   bool mSingleFrameStep;
   bool mSingleFrameMode;
-  bool mToggleBallMove;
-  bool mShowDebugInfo;
-  sf::Text mDebugInfo;
-#endif
 };
 
 #endif

@@ -19,7 +19,7 @@ PauseState::PauseState( StateStack& stack )
 
   // make background whole screen and half transparent black
   mBackgroundShape.setSize( winSize );  
-  mBackgroundShape.setFillColor( { 0, 0, 0, 150 } ); 
+  mBackgroundShape.setFillColor( sf::Color{ 0, 0, 0, 150 } ); 
 
   const auto& font = getContext()->fonts->get( Fonts::C64_Pixel );
 
@@ -41,12 +41,6 @@ PauseState::PauseState( StateStack& stack )
 
 bool PauseState::handleInput( const sf::Event& event )
 {
-  if( event.type == sf::Event::KeyReleased ) {
-    if( event.key.code == sf::Keyboard::Escape ) {
-      requestStackPop();
-    }
-  }
-
   int menuResult = mMenu.handleInput( event );
   switch( menuResult ) {
     case util::to_integral(MenuOption::RESUME):
@@ -60,7 +54,7 @@ bool PauseState::handleInput( const sf::Event& event )
 
     default:
       break;
-  } 
+  }
 
   return false;
 }
@@ -69,6 +63,7 @@ bool PauseState::handleInput( const sf::Event& event )
 
 bool PauseState::update( const sf::Time dt )
 {
+
   return false;
 }
 

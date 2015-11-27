@@ -10,7 +10,7 @@
 class FpsDisplay : public sf::Drawable, public sf::Transformable
 {
 public:
-               FpsDisplay( );
+               FpsDisplay();
   void         update( sf::Time dt );
 
 private:

@@ -6,8 +6,10 @@
 #include <states/GameoverState.hpp>
 #include <SFML/Window/Event.hpp>
 
+///////////////////////////////////////////////////////////////////////////////
+
 Application::Application()
-  : mWindow( { 800, 600 }, "Pong for #1GAM", sf::Style::Close )
+  : mWindow( { 1000, 600 }, "Pong for #1GAM", sf::Style::Close )
   , mFpsDisplay()
   , mTextures()
   , mFonts()
@@ -18,10 +20,12 @@ Application::Application()
 {
   mWindow.setKeyRepeatEnabled( false );
   mWindow.setFramerateLimit( 200u );
+  mWindow.setMouseCursorVisible( false );
   mFpsDisplay.setPosition( 10.f, 10.f );
 
   mFonts.load( Fonts::SDS_8BIT, "../media/fonts/SDS_8BIT.ttf" );
   mFonts.load( Fonts::C64_Pixel, "../media/fonts/C64-Pixel.ttf" );
+  mFonts.load( Fonts::MONOSPACE, "../media/fonts/DejaVuSansMono.ttf" );
   mTextures.load( Textures::TITLE_BG, "../media/gfx/title-bg.png" );
 
   mStack.registerState<TitleState>( States::TITLE );
@@ -31,6 +35,8 @@ Application::Application()
   mStack.registerState<GameoverState>( States::GAMEOVER );
   mStack.pushState( States::TITLE );
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 void Application::run()
 {
@@ -43,7 +49,7 @@ void Application::run()
     handleInput();
     while( timeSinceLastUpdate > mTimeStep ) {
       timeSinceLastUpdate -= mTimeStep;
-      update( mTimeStep );
+      update();
     }
     mFpsDisplay.update( dt );
     render();
@@ -55,6 +61,7 @@ void Application::run()
 }
 
 // end public interface
+///////////////////////////////////////////////////////////////////////////////
 
 void Application::handleInput()
 {
@@ -67,10 +74,14 @@ void Application::handleInput()
   mStack.handleInput( event );
 }
 
-void Application::update( const sf::Time dt )
+///////////////////////////////////////////////////////////////////////////////
+
+void Application::update()
 {
-  mStack.update( dt );
+  mStack.update( mTimeStep );
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 void Application::render()
 {
@@ -79,3 +90,5 @@ void Application::render()
   mWindow.draw( mFpsDisplay );
   mWindow.display();
 }
+
+///////////////////////////////////////////////////////////////////////////////

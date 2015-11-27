@@ -1,6 +1,8 @@
 #include "GameState.hpp"
 #include <engine/StateStack.hpp>
 
+///////////////////////////////////////////////////////////////////////////////
+
 GameState::GameState( StateStack& stack )
   : State( stack )
   , mWorld( *stack.getContext() )
@@ -8,6 +10,8 @@ GameState::GameState( StateStack& stack )
   getContext()->blackboard->gameOver = false;
   getContext()->blackboard->playerWon = false;
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 bool GameState::handleInput( const sf::Event& event )
 {
@@ -20,6 +24,8 @@ bool GameState::handleInput( const sf::Event& event )
   return true;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 bool GameState::update( const sf::Time dt )
 {
   mWorld.update( dt );
@@ -31,7 +37,11 @@ bool GameState::update( const sf::Time dt )
   return true;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+
 void GameState::render()
 {
   mWorld.render();
 }
+
+///////////////////////////////////////////////////////////////////////////////

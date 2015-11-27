@@ -19,21 +19,17 @@ GameWorld::GameWorld( const Context& context )
   , mBallAngle( 0 )
   , mBallStartSpeed( 200.f )
   , mBallSpeed( mBallStartSpeed )
-  , mOldBallSpeed( 0.f )
+  , mPrevBallSpeed( mBallSpeed )
   , mBallAcceleration( 25.f )
   , mEnemySpeed( 200.f )
   , mPlayerScore( 0u )
   , mEnemyScore( 0u )
   , mScoreText()
-  , mGameTime( sf::Time::Zero )
-  , mWinScore( 2u )  
-#ifdef _DEBUG
   , mToggleBallMove( false )
+  , mGameTime( sf::Time::Zero )
+  , mWinScore( 2u )
   , mSingleFrameStep( false )
   , mSingleFrameMode( false )
-  , mShowDebugInfo( true )
-  , mDebugInfo()
-#endif
 {
   mWinSize = { static_cast<float>( context.window->getSize().x ),
                static_cast<float>( context.window->getSize().y ) };
@@ -54,14 +50,7 @@ GameWorld::GameWorld( const Context& context )
   mScoreText.setColor( sf::Color::Green );
   setScoreString();
   util::centerOrigin( mScoreText );
-  mScoreText.setPosition( mWinSize.x / 2.f, mScoreText.getOrigin().y + 5.f );
-
-#ifdef _DEBUG
-  mDebugInfo.setFont( context.fonts->get( Fonts::MONOSPACE ) );
-  mDebugInfo.setCharacterSize( 10u );
-  setDebugInfo();
-  mDebugInfo.setPosition( 15.f, mWinSize.y - 15.f );
-#endif
+  mScoreText.setPosition( mWinSize.x / 2.f, mScoreText.getOrigin().y + 5.f );  
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -76,12 +65,11 @@ void GameWorld::handleInput( const sf::Event& event )
   }
 
   if( event.type == sf::Event::KeyPressed ) {
-#ifdef _DEBUG
     if( event.key.code == sf::Keyboard::F1 ) {
-      mToggleBallMove = !mToggleBallMove; // toggle ball movement
+      mToggleBallMove = true; // generate stop ball command
     }
     if( event.key.code == sf::Keyboard::F2 ) {
-      mShowDebugInfo = !mShowDebugInfo; // toggle debug info on/off
+
     }
     if( event.key.code == sf::Keyboard::F3 ) {
       mSingleFrameMode = !mSingleFrameMode; // toggle single frame mode on/off
@@ -89,7 +77,6 @@ void GameWorld::handleInput( const sf::Event& event )
     if( event.key.code == sf::Keyboard::F4 ) {
       mSingleFrameStep = true; // advance a single frame in single frame mode
     }
-#endif
   }
 }
 
@@ -97,38 +84,21 @@ void GameWorld::handleInput( const sf::Event& event )
 
 void GameWorld::update( const sf::Time dt )
 {
-#ifdef _DEBUG
-  if( mShowDebugInfo ) {
-    setDebugInfo();
-  }
-#endif
-
   mGameTime += dt; // count the elapsed time of the played ball
   if( mGameTime < sf::seconds( 2.0f ) ) {
     return; // if not 2 seconds have passed immediatly cancel update
   }
 
-  // if we are in single frame mode and no single frame step has been requested
-  // just abort update completly
-  // otherwise continue and reset single frame step variable
-#ifdef _DEBUG
   if( mSingleFrameMode && !mSingleFrameStep ) {
     return;
   }
   mSingleFrameStep = false;
 
   if( mToggleBallMove ) {
-    if( mBallSpeed != 0.f ) {
-      mOldBallSpeed = mBallSpeed;
-      mBallSpeed = 0.f;
-    }
-  } else {
-    if( mOldBallSpeed != 0.f ) {
-      mBallSpeed = mOldBallSpeed;
-      mOldBallSpeed = 0.f;
-    }
+    mPrevBallSpeed = mBallSpeed;
+    mBallSpeed = 0.f;
+    mToggleBallMove = false;
   }
-#endif
 
   auto vector = util::toVector( util::degToRad( static_cast<float>( mBallAngle ) ) );
   auto ballMove = vector * mBallSpeed * dt.asSeconds();
@@ -162,7 +132,7 @@ void GameWorld::update( const sf::Time dt )
   // if the ball collides with one of the paddles correct x position to just
   // touch the paddle and reflect ball a y-axis
   // formula for y-axis reflection is newAngle = 360 + ( 180 - oldAngle )
-  // speed ball up by acceleration after every paddle collision
+  // speed ball up by 5% after every paddle collision
   else if( ballGBounds.intersects( mPlayer.getGlobalBounds() )
            && mBallAngle > 90 && mBallAngle < 270 ) {
     auto newBallX = playerGBounds.left + playerGBounds.width
@@ -259,7 +229,7 @@ void GameWorld::update( const sf::Time dt )
   } else if( mEnemyScore >= mWinScore && mEnemyScore >= mPlayerScore ) {
     mContext.blackboard->gameOver = true;
     mContext.blackboard->playerWon = false;
-  }  
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -271,12 +241,6 @@ void GameWorld::render()
   window.draw( mPlayer );
   window.draw( mEnemy );
   window.draw( mGameBall );
-
-#ifdef _DEBUG
-  if( mShowDebugInfo ) {
-    window.draw( mDebugInfo );
-  }
-#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -305,21 +269,5 @@ void GameWorld::resetGameBall()
   mPlayer.setPosition( mPlayer.getPosition().x, mWinSize.y / 2.f );
   mEnemy.setPosition( mEnemy.getPosition().x, mWinSize.y / 2.f );
 }
-
-///////////////////////////////////////////////////////////////////////////////
-
-#ifdef _DEBUG
-void GameWorld::setDebugInfo()
-{
-  mDebugInfo.setString( "game ball x: " + std::to_string( mGameBall.getPosition().x )
-                        + " y: " + std::to_string( mGameBall.getPosition().y ) + "\n"
-                        + "ball speed: " + std::to_string( mBallSpeed )
-                        + " ball angle: " + std::to_string( mBallAngle ) + "\n"
-                        + "game time: " + std::to_string( mGameTime.asSeconds() )
-                        );
-
-  mDebugInfo.setOrigin( 0.f, mDebugInfo.getLocalBounds().height );
-}
-#endif
 
 ///////////////////////////////////////////////////////////////////////////////

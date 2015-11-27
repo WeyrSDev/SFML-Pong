@@ -16,7 +16,7 @@ public:
 
 private:
   void              handleInput();
-  void              update( sf::Time dt );
+  void              update();
   void              render();
 
   sf::RenderWindow  mWindow;
