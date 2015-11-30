@@ -3,25 +3,30 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-FpsDisplay::FpsDisplay()
-  : mFont()
-  , mFpsText()
-  , mFrames( 0 )
-  , mFps( 0 )
-  , mFpsTime( sf::Time::Zero )
+class FpsDisplay::Impl
 {
-  if( !mFont.loadFromFile( "../media/fonts/DejaVuSansMono.ttf " ) ) {
-    throw std::runtime_error( "" );
-  }
+public:
+  Impl( const sf::Font& font, unsigned int size );
+  void update( const sf::Time dt );
 
-  mFpsText.setFont( mFont );
-  mFpsText.setCharacterSize( 12u );
-  mFpsText.setString( "0 fps" );
-}
+  sf::Text mFpsText;
+  std::size_t mFrames;
+  std::size_t mFps;
+  sf::Time mFpsTime;
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void FpsDisplay::update( const sf::Time dt )
+FpsDisplay::Impl::Impl( const sf::Font& font, unsigned int size )
+  : mFpsText( "0 fps", font, size )
+  , mFrames( 0 )
+  , mFps( 0 )
+  , mFpsTime( sf::Time::Zero )
+{}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FpsDisplay::Impl::update( const sf::Time dt )
 {
   mFpsTime += dt;
   mFrames += 1;
@@ -36,10 +41,23 @@ void FpsDisplay::update( const sf::Time dt )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+FpsDisplay::FpsDisplay( const sf::Font& font, unsigned int size )
+  : mImpl( std::make_unique<Impl>( font, size ) )
+{}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void FpsDisplay::update( const sf::Time dt )
+{
+  mImpl->update( dt );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void FpsDisplay::draw( sf::RenderTarget& target, sf::RenderStates states ) const
 {
   states.transform *= getTransform();
-  target.draw( mFpsText, states );
+  target.draw( mImpl->mFpsText, states );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

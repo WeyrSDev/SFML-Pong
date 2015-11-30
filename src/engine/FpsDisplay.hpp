@@ -6,20 +6,22 @@
 #include <SFML/Graphics/Font.hpp>
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Time.hpp>
+#include <memory>
 
 class FpsDisplay : public sf::Drawable, public sf::Transformable
 {
 public:
-               FpsDisplay();
+               FpsDisplay( const sf::Font& font, unsigned int size = 12u );
   void         update( sf::Time dt );
 
 private:
   virtual void draw( sf::RenderTarget& target, sf::RenderStates states ) const override;
-  sf::Font     mFont;
-  sf::Text     mFpsText;
-  std::size_t  mFrames;
-  std::size_t  mFps;
-  sf::Time     mFpsTime;
+
+  class Impl;
+  std::unique_ptr<Impl> mImpl;
+
+  FpsDisplay( const FpsDisplay& ) = delete;
+  FpsDisplay& operator=( const FpsDisplay& ) = delete;
 };
 
 #endif

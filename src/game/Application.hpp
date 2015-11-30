@@ -7,6 +7,7 @@
 #include <engine/ResourceCache.hpp>
 #include <engine/Blackboard.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <memory>
 
 class Application
 {
@@ -20,7 +21,7 @@ private:
   void              render();
 
   sf::RenderWindow  mWindow;
-  FpsDisplay        mFpsDisplay;
+  std::unique_ptr<FpsDisplay> mFpsDisplay;
   TextureCache      mTextures;
   FontCache         mFonts;
   Blackboard        mBBoard;

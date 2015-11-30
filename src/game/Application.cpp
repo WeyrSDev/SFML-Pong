@@ -10,7 +10,7 @@
 
 Application::Application()
   : mWindow( { 1000, 600 }, "Pong for #1GAM", sf::Style::Close )
-  , mFpsDisplay()
+  , mFpsDisplay( nullptr )
   , mTextures()
   , mFonts()
   , mBBoard()
@@ -20,13 +20,15 @@ Application::Application()
 {
   mWindow.setKeyRepeatEnabled( false );
   mWindow.setFramerateLimit( 200u );
-  mWindow.setMouseCursorVisible( false );
-  mFpsDisplay.setPosition( 10.f, 10.f );
+  mWindow.setMouseCursorVisible( false );  
 
   mFonts.load( Fonts::SDS_8BIT, "../media/fonts/SDS_8BIT.ttf" );
   mFonts.load( Fonts::C64_Pixel, "../media/fonts/C64-Pixel.ttf" );
   mFonts.load( Fonts::MONOSPACE, "../media/fonts/DejaVuSansMono.ttf" );
   mTextures.load( Textures::TITLE_BG, "../media/gfx/title-bg.png" );
+
+  mFpsDisplay = std::make_unique<FpsDisplay>( mFonts.get( Fonts::MONOSPACE ) );
+  mFpsDisplay->setPosition( 10.f, 10.f );
 
   mStack.registerState<TitleState>( States::TITLE );
   mStack.registerState<MenuState>( States::MENU );
@@ -51,7 +53,7 @@ void Application::run()
       timeSinceLastUpdate -= mTimeStep;
       update();
     }
-    mFpsDisplay.update( dt );
+    mFpsDisplay->update( dt );
     render();
 
     if( mStack.isEmpty() ) {
@@ -87,7 +89,7 @@ void Application::render()
 {
   mWindow.clear();
   mStack.render();
-  mWindow.draw( mFpsDisplay );
+  mWindow.draw( *mFpsDisplay );
   mWindow.display();
 }
 
