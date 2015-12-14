@@ -57,7 +57,7 @@ GameWorld::GameWorld( const Context& context )
   mScoreText.setPosition( mWinSize.x / 2.f, mScoreText.getOrigin().y + 5.f );
 
 #ifdef _DEBUG
-  mDebugInfo.setFont( context.fonts->get( Fonts::MONOSPACE ) );
+  mDebugInfo.setFont( mContext.fonts->get( Fonts::MONOSPACE ) );
   mDebugInfo.setCharacterSize( 10u );
   setDebugInfo();
   mDebugInfo.setPosition( 15.f, mWinSize.y - 15.f );
@@ -68,14 +68,11 @@ GameWorld::GameWorld( const Context& context )
 
 void GameWorld::handleInput( const sf::Event& event )
 {
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) ) {
-    mMoveUp = true; // generate move up command
-  }
-  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) ) {
-    mMoveDown = true; // generate move down command
-  }
+#ifdef _DEBUG
+  std::cout << "GameWorld::handleInput() - Tick" << std::endl;
+#endif
 
-  if( event.type == sf::Event::KeyPressed ) {
+  if( event.type == mContext.blackboard->keyEventType ) {
 #ifdef _DEBUG
     if( event.key.code == sf::Keyboard::F1 ) {
       mToggleBallMove = !mToggleBallMove; // toggle ball movement
@@ -95,23 +92,28 @@ void GameWorld::handleInput( const sf::Event& event )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void GameWorld::handleRealtimeInput()
+{
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Up ) ) {
+    mMoveUp = true; // generate move up command
+  }
+  if( sf::Keyboard::isKeyPressed( sf::Keyboard::Down ) ) {
+    mMoveDown = true; // generate move down command
+  }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void GameWorld::update( const sf::Time dt )
 {
 #ifdef _DEBUG
+  // if debug info is to be shown, update it before hand
   if( mShowDebugInfo ) {
     setDebugInfo();
   }
-#endif
-
-  mGameTime += dt; // count the elapsed time of the played ball
-  if( mGameTime < sf::seconds( 2.0f ) ) {
-    return; // if not 2 seconds have passed immediatly cancel update
-  }
-
   // if we are in single frame mode and no single frame step has been requested
   // just abort update completly
   // otherwise continue and reset single frame step variable
-#ifdef _DEBUG
   if( mSingleFrameMode && !mSingleFrameStep ) {
     return;
   }
@@ -129,6 +131,11 @@ void GameWorld::update( const sf::Time dt )
     }
   }
 #endif
+
+  mGameTime += dt; // count the elapsed time of the played ball
+  if( mGameTime < sf::seconds( 2.0f ) ) {
+    return; // if not 2 seconds have passed immediatly cancel update
+  }
 
   auto vector = util::toVector( util::degToRad( static_cast<float>( mBallAngle ) ) );
   auto ballMove = vector * mBallSpeed * dt.asSeconds();

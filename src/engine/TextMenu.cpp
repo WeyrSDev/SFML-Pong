@@ -16,11 +16,14 @@ class TextMenu::Impl
 {
 public:
   Impl( sf::Font& font, unsigned int textSize, unsigned int space,
-        TextMenu::Alignment alignment, sf::Color baseColor,
-        sf::Color highlightColor );
+        sf::Event::EventType keyEventType, TextMenu::Alignment alignment,
+        sf::Color baseColor, sf::Color highlightColor );
 
   void ensureGeometryUpdate();
   void updateMenuText();
+  int  handleInput( const sf::Event evt );
+  void update( sf::Time dt );
+  void add( sf::String entry );
 
   std::vector<sf::Text>   mEntries;
   sf::Font&               mFont;
@@ -32,13 +35,14 @@ public:
   bool                    mGeometryNeedUpdate;
   sf::Color               mBaseColor;
   sf::Color               mHighlightColor;
+  sf::Event::EventType    mKeyEventType;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TextMenu::Impl::Impl( sf::Font& font, unsigned int textSize, unsigned int space,
-                      TextMenu::Alignment alignment, sf::Color baseColor,
-                      sf::Color highlightColor )
+                      sf::Event::EventType keyEventType, TextMenu::Alignment alignment,
+                      sf::Color baseColor, sf::Color highlightColor )
   : mEntries()
   , mFont( font )
   , mTextSize( textSize )
@@ -49,27 +53,37 @@ TextMenu::Impl::Impl( sf::Font& font, unsigned int textSize, unsigned int space,
   , mGeometryNeedUpdate( false )
   , mBaseColor( baseColor )
   , mHighlightColor( highlightColor )
+  , mKeyEventType( keyEventType )
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void TextMenu::Impl::ensureGeometryUpdate()
 {
+  // if no update is needed, do nothing
   if( !mGeometryNeedUpdate ) {
     return;
   }
+  // mark as updated
   mGeometryNeedUpdate = false;
+
+  // update text size for all menu entries
+  for( auto& entry : mEntries ) {
+    entry.setCharacterSize( mTextSize );    
+  }
 
   // calculate new bounding rectangle
   mBounds = sf::FloatRect();
   mBounds.top = 0.f;
   mBounds.left = 0.f;
 
+  // calculate total y-size
   // all entries * text size + ( all entries - 1 ) * spacing = total y-size
   auto numItem = static_cast<float>( mEntries.size() );
   mBounds.height = numItem * static_cast<float>( mTextSize )
     + ( numItem - 1.f ) * static_cast<float>( mSpacing );
 
+  // calculate total x-size
   // cycle through all entries and measure their width
   // to find the biggest one --> total x size
   auto maxXSize { 0.f };
@@ -80,7 +94,8 @@ void TextMenu::Impl::ensureGeometryUpdate()
     }
   }
   mBounds.width = maxXSize;
-    
+  
+  // set Alignment and origins of every entry
   std::size_t i { 0 };
   for( auto& entry : mEntries ) {
     auto lBounds = entry.getLocalBounds();
@@ -111,26 +126,81 @@ void TextMenu::Impl::ensureGeometryUpdate()
 
 void TextMenu::Impl::updateMenuText()
 {
+  // if no entries abort
   if( mEntries.empty() ) {
     return;
   }
 
+  // make all entries the base color
   for( auto& entry : mEntries ) {
     entry.setColor( mBaseColor );
   }
 
+  // and then make the selected index the highlight color
   mEntries[ mIndex ].setColor( mHighlightColor );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+int TextMenu::Impl::handleInput( const sf::Event evt )
+{
+  if( evt.type == mKeyEventType ) {
+    if( evt.key.code == sf::Keyboard::Return ) {
+      return mIndex;
+    }
+
+    if( evt.key.code == sf::Keyboard::Up ) {
+      if( mIndex > 0 ) {
+        --mIndex;
+      } else {
+        mIndex = mEntries.size() - 1;
+      }
+      updateMenuText();
+    }
+
+    if( evt.key.code == sf::Keyboard::Down ) {
+      if( mIndex < mEntries.size() - 1 ) {
+        ++mIndex;
+      } else {
+        mIndex = 0;
+      }
+      updateMenuText();
+    }
+  }
+
+  return -1;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TextMenu::Impl::update( const sf::Time dt )
+{
+  // This method can be used to add fancy effects to the menu
+  // placed inside impl to be changed without the visible class
+  // needed to be recompiled
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void TextMenu::Impl::add( const sf::String entry )
+{
+  // make sure string ist not empty
+  assert( entry != "" );
+
+  sf::Text text( entry, mFont, mTextSize );
+  mEntries.push_back( std::move( text ) );
+  mGeometryNeedUpdate = true;
 }
 
 // end private implemenation
 ///////////////////////////////////////////////////////////////////////////////
 
 TextMenu::TextMenu( sf::Font & font, unsigned int textSize, unsigned int space,
-                    Alignment alignment, sf::Color baseColor,
-                    sf::Color highlightColor )
+                    sf::Event::EventType keyEventType, Alignment alignment,
+                    sf::Color baseColor, sf::Color highlightColor )
 
   : mImpl( std::make_unique<TextMenu::Impl>( font, textSize, space,
-           alignment, baseColor, highlightColor ) )
+           keyEventType, alignment, baseColor, highlightColor ) )
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -140,54 +210,23 @@ TextMenu::~TextMenu()
 
 ///////////////////////////////////////////////////////////////////////////////
 
-int TextMenu::handleInput( const sf::Event & event )
+int TextMenu::handleInput( const sf::Event & evt )
 {
-  if( event.type == sf::Event::KeyReleased ) {
-    if( event.key.code == sf::Keyboard::Return ) {
-      return mImpl->mIndex;
-    }
-
-    if( event.key.code == sf::Keyboard::Up ) {
-      if( mImpl->mIndex > 0 ) {
-        --mImpl->mIndex;
-      } else {
-        mImpl->mIndex = mImpl->mEntries.size() - 1;
-      }
-      mImpl->updateMenuText();
-    }
-
-    if( event.key.code == sf::Keyboard::Down ) {
-      if( mImpl->mIndex < mImpl->mEntries.size() - 1 ) {
-        ++mImpl->mIndex;
-      } else {
-        mImpl->mIndex = 0;
-      }
-      mImpl->updateMenuText();
-    }
-  }
-  
-  return -1;
+  return mImpl->handleInput( evt );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void TextMenu::update( const sf::Time dt )
 {
-  // this method could be used for visual effects
-  // e.g. animated icons for selected menu entry
+  mImpl->update( dt );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void TextMenu::add( const sf::String entry )
 {
-  // make sure string ist not empty
-  assert( entry != "" );
-
-  sf::Text text( entry, mImpl->mFont, mImpl->mTextSize );
-  mImpl->mEntries.push_back( std::move( text ) );
-
-  mImpl->mGeometryNeedUpdate = true;
+  mImpl->add( entry );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -195,6 +234,7 @@ void TextMenu::add( const sf::String entry )
 void TextMenu::setTextSize( const unsigned int size )
 {
   mImpl->mTextSize = size;
+  mImpl->mGeometryNeedUpdate = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -209,6 +249,7 @@ unsigned int TextMenu::getTextSize() const
 void TextMenu::setSpacing( const unsigned int space )
 {
   mImpl->mSpacing = space;
+  mImpl->mGeometryNeedUpdate = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -223,6 +264,7 @@ unsigned int TextMenu::getSpacing() const
 void TextMenu::setAlignment( const Alignment alignment )
 {
   mImpl->mAlignment = alignment;
+  mImpl->mGeometryNeedUpdate = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -237,6 +279,7 @@ TextMenu::Alignment TextMenu::getAlignment() const
 void TextMenu::setBaseColor( const sf::Color base )
 {
   mImpl->mBaseColor = base;
+  mImpl->mGeometryNeedUpdate = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -251,6 +294,7 @@ sf::Color TextMenu::getBaseColor() const
 void TextMenu::setHighlightColor( const sf::Color highlight )
 {
   mImpl->mHighlightColor = highlight;
+  mImpl->mGeometryNeedUpdate = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

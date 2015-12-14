@@ -1,5 +1,10 @@
 #include "StateStack.hpp"
+#include "Utility.hpp"
 #include <cassert>
+#include <algorithm>
+#ifdef _DEBUG
+#include <iostream>
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -8,6 +13,7 @@ StateStack::StateStack( Context& context )
   , mPendingChanges()
   , mContext( &context )
   , mFactories()
+  , mStateStrings( initStateStrings() )
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -47,6 +53,9 @@ void StateStack::render()
 void StateStack::pushState( States id )
 {
   mPendingChanges.push_back( PendingChange( Action::PUSH, id ) );
+#ifdef _DEBUG
+  std::cout << "state changed to " << getStateName( id ) << std::endl;
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -75,6 +84,16 @@ bool StateStack::isEmpty() const
 Context* StateStack::getContext() const
 {
   return mContext;
+}
+
+std::string StateStack::getStateName( States id ) const
+{
+  auto name = mStateStrings.find( id );
+  if( name != std::end( mStateStrings ) ) {
+    return name->second;
+  } else {
+    return std::string("NAME NOT FOUND");
+  }    
 }
 
 // end public interface

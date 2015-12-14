@@ -6,11 +6,12 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GameoverState::GameoverState( StateStack& stack )
-  : State( stack )
+GameoverState::GameoverState( StateStack& stack, States id )
+  : State( stack, id )
   , mBackgroundSprite()
   , mGameoverText()
-  , mMenu( getContext()->fonts->get( Fonts::C64_Pixel ), 30u, 15u )
+  , mMenu( getContext()->fonts->get( Fonts::C64_Pixel ), 30u, 15u,
+           getContext()->blackboard->keyEventType )
 {
   mBackgroundSprite.setTexture( getContext()->textures
                                 ->get( Textures::TITLE_BG ) );

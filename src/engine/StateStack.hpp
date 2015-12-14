@@ -3,12 +3,16 @@
 
 #include "Context.hpp"
 #include "State.hpp"
+#include "Utility.hpp"
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include <vector>
 #include <map>
 #include <functional>
 #include <utility>
+#ifdef _DEBUG
+#include <iostream>
+#endif
 
 class StateStack
 {
@@ -34,6 +38,7 @@ public:
   void clearStates();
   bool isEmpty() const;
   Context* getContext() const;
+  std::string getStateName( States id ) const;
 
 private:
   State::Ptr createState( States id );
@@ -54,6 +59,7 @@ private:
   std::vector<PendingChange> mPendingChanges;
   Context* mContext;
   std::map<States, std::function<State::Ptr()>> mFactories;
+  StateStrings mStateStrings;
 
   StateStack( const StateStack& ) = delete;
   StateStack& operator=( const StateStack& ) = delete;
@@ -63,8 +69,11 @@ private:
 template <typename T>
 void StateStack::registerState( States id )
 {
-  mFactories[ id ] = [ this ]() {
-    return std::make_unique<T>( *this );
+  mFactories[ id ] = [ this, id ]() {
+    return std::make_unique<T>( *this, id );
+#ifdef _DEBUG
+    std::cout << "Registering state " << std::to_string( util::to_integral( id ) ) << std::endl;
+#endif
   };
 }
 

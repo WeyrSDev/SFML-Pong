@@ -5,8 +5,11 @@ MusicPlayer::MusicPlayer()
   , mMusicFiles()
   , mVolume( 100u )
 {
-  mMusicFiles[ Music::MENU_THEME ] = "";
-  mMusicFiles[ Music::GAME_THEME ] = "";
+  // SIC adding files in the player class itself couples it with the content
+  // music files must be stored outside the player and only be referenced here
+  //mMusicFiles[ Music::MENU_THEME ] = "";
+  //mMusicFiles[ Music::GAME_THEME ] = "";
+
 }
 
 void MusicPlayer::play( Music theme )

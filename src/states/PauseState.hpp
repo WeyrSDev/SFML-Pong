@@ -9,7 +9,7 @@
 class PauseState : public State
 {
 public:
-  explicit PauseState( StateStack& stack );
+               PauseState( StateStack& stack, States id );
 
   virtual bool handleInput( const sf::Event& event ) override;
   virtual bool update( sf::Time dt ) override;

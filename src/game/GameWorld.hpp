@@ -14,6 +14,7 @@ class GameWorld
 public:
   explicit GameWorld( const Context& context );
   void handleInput( const sf::Event& event );
+  void handleRealtimeInput();
   void update( sf::Time dt );
   void render();
 

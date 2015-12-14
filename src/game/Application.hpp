@@ -7,6 +7,7 @@
 #include <engine/ResourceCache.hpp>
 #include <engine/Blackboard.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Font.hpp>
 #include <memory>
 
 class Application

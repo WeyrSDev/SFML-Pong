@@ -1,7 +1,7 @@
 #ifndef STATE_HPP
 #define STATE_HPP
 
-#include "StateIdentifiers.hpp"
+#include <states/StateIdentifiers.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/System/Time.hpp>
 #include <memory>
@@ -14,7 +14,7 @@ class State
 public:
   typedef std::unique_ptr<State> Ptr;
 
-  explicit      State( StateStack& stack );
+  explicit      State( StateStack& stack, States id );
   virtual       ~State();
   virtual bool  handleInput( const sf::Event& event ) = 0;
   virtual bool  update( sf::Time dt ) = 0;
@@ -28,6 +28,7 @@ protected:
 
 private:
   StateStack*   mStack;
+  States        mId;
 
   State( const State& ) = delete;
   State& operator=( const State& ) = delete;

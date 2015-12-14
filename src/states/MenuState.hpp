@@ -6,11 +6,12 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <vector>
+#include <memory>
 
 class MenuState : public State
 {
 public:
-  explicit     MenuState( StateStack& stack );
+               MenuState( StateStack& stack, States id );
   virtual bool handleInput( const sf::Event& event ) override;
   virtual bool update( sf::Time dt ) override;
   virtual void render() override;
@@ -24,9 +25,8 @@ private:
     EXIT = 3u,
   };
 
-  sf::Sprite mBackgroundSprite;
-  sf::Text   mTitle;
   TextMenu   mMenu;
+  std::vector<std::unique_ptr<sf::Drawable>> mDrawObjects;
 };
 
 #endif

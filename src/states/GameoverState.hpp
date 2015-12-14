@@ -9,10 +9,10 @@
 class GameoverState : public State
 {
 public:
-  explicit GameoverState( StateStack& stack );
-  bool handleInput( const sf::Event& event ) override;
-  bool update( sf::Time dt ) override;
-  void render() override;
+               GameoverState( StateStack& stack, States id );
+  virtual bool handleInput( const sf::Event& event ) override;
+  virtual bool update( sf::Time dt ) override;
+  virtual void render() override;
 
 private:
   enum class MenuOption : unsigned int

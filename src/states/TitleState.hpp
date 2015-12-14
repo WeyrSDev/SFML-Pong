@@ -4,23 +4,24 @@
 #include <engine/State.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <vector>
+#include <memory>
 
 class TitleState : public State
 {
 public:
-  explicit     TitleState( StateStack& stack );
+               TitleState( StateStack& stack, States id );
 
   virtual bool handleInput( const sf::Event& event ) override;
   virtual bool update( sf::Time dt ) override;
   virtual void render() override;
 
 private:
-  sf::Sprite   mBackgroundSprite;
-  sf::Text     mTitle;
-  sf::Text     mText;
+  sf::Text     mStartText;
   bool         mShowText;
   sf::Time     mTextEffectTime;
   sf::Time     mFrameTime;
+  std::vector<std::unique_ptr<sf::Drawable>> mDrawObjects;
 };
 
 #endif

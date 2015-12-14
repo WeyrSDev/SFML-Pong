@@ -1,8 +1,13 @@
 #include "FpsDisplay.hpp"
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/Font.hpp>
+#include <SFML/Graphics/Text.hpp>
+#include <SFML/System/Time.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// Hidden implementation class of FpsDisplay
+// constructor must be called by contructor of FpsDisplay
 class FpsDisplay::Impl
 {
 public:
@@ -47,6 +52,13 @@ FpsDisplay::FpsDisplay( const sf::Font& font, unsigned int size )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// explicit default destructor is needed that the unique_ptr-member
+// can be deconstructed
+FpsDisplay::~FpsDisplay()
+{}
+
+///////////////////////////////////////////////////////////////////////////////
+
 void FpsDisplay::update( const sf::Time dt )
 {
   mImpl->update( dt );
@@ -54,6 +66,8 @@ void FpsDisplay::update( const sf::Time dt )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+// Implementation of draw does not need to reside in FpsDisplay::Impl
+// because virtual functions should be defined in the visible class
 void FpsDisplay::draw( sf::RenderTarget& target, sf::RenderStates states ) const
 {
   states.transform *= getTransform();

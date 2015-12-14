@@ -7,41 +7,51 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TitleState::TitleState( StateStack& stack )
-  : State( stack )
-  , mBackgroundSprite()
-  , mTitle()
-  , mText()
+TitleState::TitleState( StateStack& stack, States id )
+  : State( stack, id )
+  , mStartText()
   , mShowText( true )
-  , mTextEffectTime( sf::seconds( 1.f ) )
+  , mTextEffectTime( sf::seconds( 0.66f ) )
   , mFrameTime( sf::Time::Zero )
+  , mDrawObjects()
 {
   const auto& font = getContext()->fonts->get( Fonts::C64_Pixel );
   auto winSize = getContext()->window->getView().getSize();
 
-  mBackgroundSprite.setTexture( getContext()->textures->get( Textures::TITLE_BG ) );
-    
-  mTitle.setFont( font );
-  mTitle.setString( "P O N G" );
-  mTitle.setCharacterSize( 80u );
-  mTitle.setColor( sf::Color::Green );
-  util::centerOrigin( mTitle );
-  
-  mTitle.setPosition( winSize.x / 2.f, 100.f );
+  mStartText.setFont( font );
+  mStartText.setString( "< Press any key to start >" );
+  mStartText.setCharacterSize( 24u );
+  mStartText.setColor( sf::Color::Green );
+  util::centerOrigin( mStartText );
+  mStartText.setPosition( winSize / 2.f );
 
-  mText.setFont( font );
-  mText.setString( "< Press any key to start >" );
-  mText.setCharacterSize( 24u );
-  mText.setColor( sf::Color::Green );
-  util::centerOrigin( mText );
-  mText.setPosition( winSize / 2.f );
+  auto bgSprite = std::make_unique<sf::Sprite>
+    ( getContext()->textures->get( Textures::TITLE_BG ) );
+  mDrawObjects.push_back( std::move( bgSprite ) );
+    
+  auto title = std::make_unique<sf::Text>
+    ( "P O N G", font, 100u );
+  title->setColor( sf::Color::Green );
+  util::centerOrigin( *title );
+  title->setPosition( winSize.x / 2.f, 100.f );
+  mDrawObjects.push_back( std::move( title ) );
+  
+  auto nameText = std::make_unique<sf::Text>
+    ( "created by Sebastian 'SeriousITGuy' Brack",
+      getContext()->fonts->get( Fonts::DP_COMIC ), 24u );
+  util::centerOrigin( *nameText );
+  nameText->setPosition( winSize.x / 2.f, winSize.y - 30.f );
+  mDrawObjects.push_back( std::move( nameText ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 bool TitleState::handleInput( const sf::Event& event )
 {
-  if( event.type == sf::Event::KeyReleased ) {
+  if( event.type == getContext()->blackboard->keyEventType ) {
+#ifdef _DEBUG
+    std::cout << "TitleState::handleInput - key pressed event registered" << std::endl;
+#endif
     requestStackPop();
     requestStackPush( States::MENU );
   }
@@ -67,10 +77,11 @@ bool TitleState::update( const sf::Time dt )
 void TitleState::render()
 {
   sf::RenderWindow& window = *getContext()->window;
-  window.draw( mBackgroundSprite );
-  window.draw( mTitle );
+  for( const auto& drawObject : mDrawObjects ) {
+    window.draw( *drawObject );
+  }  
   if( mShowText ) {
-    window.draw( mText );
+    window.draw( mStartText );
   }
 }
 

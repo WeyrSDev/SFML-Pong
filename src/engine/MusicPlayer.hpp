@@ -1,10 +1,13 @@
 #ifndef MUSICPLAYER_HPP
 #define MUSICPLAYER_HPP
 
-#include "ResourceIdentifiers.hpp"
+//#include "ResourceIdentifiers.hpp"
 #include <SFML/Audio/Music.hpp>
 #include <map>
 
+// forward declaring of Music id's decouples player from actual content
+// content must be declared and loaded outside of class
+enum class Music : unsigned short;
 
 class MusicPlayer
 {

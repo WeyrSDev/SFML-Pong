@@ -3,24 +3,47 @@
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
-#include <SFML/Graphics/Font.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/System/Time.hpp>
 #include <memory>
 
+// forward declarations for pimpl
+namespace sf
+{
+  class Font;
+  class Text;
+  class Time;
+}
+
+// Simple framerate display for SFML applications
+// stores only a reference of sf::Font, so font must
+// be alive for the life time of FpsDisplay
 class FpsDisplay : public sf::Drawable, public sf::Transformable
 {
 public:
-               FpsDisplay( const sf::Font& font, unsigned int size = 12u );
-  void         update( sf::Time dt );
+  // Contructs a new instance of FpsDisplay with a given font
+  // size defaults to 12 pixel
+  FpsDisplay( const sf::Font& font, unsigned int size = 12u );
+
+  // explicit default deconstructor needed cause of unique_ptr-member
+  ~FpsDisplay();
+
+  // update with a valid sf::Time object
+  // needs to be called every frame of the sfml window
+  void update( sf::Time dt );
 
 private:
+  // override of sf::Drawable::draw()
   virtual void draw( sf::RenderTarget& target, sf::RenderStates states ) const override;
 
+  // forward definition of private implementation class
   class Impl;
+
+  // unique_ptr to private implementation
   std::unique_ptr<Impl> mImpl;
 
+  // deleted copy constructor
   FpsDisplay( const FpsDisplay& ) = delete;
+
+  // deleted copy assignment operatr
   FpsDisplay& operator=( const FpsDisplay& ) = delete;
 };
 

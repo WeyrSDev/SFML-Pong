@@ -3,25 +3,26 @@
 
 namespace sf
 {
-class Texture;
-class Font;
+  class Texture;
+  class Font;
 }
 
-enum class Textures
+enum class Textures : unsigned short
 {
-  TITLE_BG,
+  TITLE_BG = 0u,
 };
 
-enum class Fonts
+enum class Fonts : unsigned short
 {
-  MONOSPACE,
+  MONOSPACE = 0u,
   SDS_8BIT,
   C64_Pixel,
+  DP_COMIC,
 };
 
-enum class Music
+enum class Music : unsigned short
 {
-  MENU_THEME,
+  MENU_THEME = 0u,
   GAME_THEME,
 };
 

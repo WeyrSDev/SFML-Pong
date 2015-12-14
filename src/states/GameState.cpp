@@ -3,8 +3,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GameState::GameState( StateStack& stack )
-  : State( stack )
+GameState::GameState( StateStack& stack, States id )
+  : State( stack, id )
   , mWorld( *stack.getContext() )
 {
   getContext()->blackboard->gameOver = false;
@@ -16,11 +16,13 @@ GameState::GameState( StateStack& stack )
 bool GameState::handleInput( const sf::Event& event )
 {
   mWorld.handleInput( event );
-  if( event.type == sf::Event::KeyReleased ) {
+
+  if( event.type == getContext()->blackboard->keyEventType ) {
     if( event.key.code == sf::Keyboard::Escape ) {
       requestStackPush( States::PAUSE );
     }
   }
+
   return true;
 }
 
@@ -28,6 +30,7 @@ bool GameState::handleInput( const sf::Event& event )
 
 bool GameState::update( const sf::Time dt )
 {
+  mWorld.handleRealtimeInput();
   mWorld.update( dt );
   if( getContext()->blackboard->gameOver ) {
     requestStackPop();

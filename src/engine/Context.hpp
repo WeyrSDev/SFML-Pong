@@ -1,7 +1,7 @@
 #ifndef CONTEXT_HPP
 #define CONTEXT_HPP
 
-#include "ResourceIdentifiers.hpp"
+#include <game/ResourceIdentifiers.hpp>
 #include "Blackboard.hpp"
 
 namespace sf

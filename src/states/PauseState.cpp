@@ -6,11 +6,12 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PauseState::PauseState( StateStack& stack )
-  : State( stack )
+PauseState::PauseState( StateStack& stack, States id )
+  : State( stack, id )
   , mBackgroundShape()
   , mPauseText()
-  , mMenu( getContext()->fonts->get( Fonts::C64_Pixel ), 30u, 15u )
+  , mMenu( getContext()->fonts->get( Fonts::C64_Pixel ), 30u, 15u,
+           getContext()->blackboard->keyEventType )
 {
   auto winSize = sf::Vector2f{ static_cast<float>( getContext()->
                                                    window->getSize().x ),
@@ -41,7 +42,7 @@ PauseState::PauseState( StateStack& stack )
 
 bool PauseState::handleInput( const sf::Event& event )
 {
-  if( event.type == sf::Event::KeyReleased ) {
+  if( event.type == sf::Event::KeyPressed ) {
     if( event.key.code == sf::Keyboard::Escape ) {
       requestStackPop();
     }
