@@ -53,9 +53,7 @@ void StateStack::render()
 void StateStack::pushState( States id )
 {
   mPendingChanges.push_back( PendingChange( Action::PUSH, id ) );
-#ifdef _DEBUG
-  std::cout << "state changed to " << getStateName( id ) << std::endl;
-#endif
+  mContext->log->msg( "state changed to " + getStateName( id ), util::LogType::DEBUG );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

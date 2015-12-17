@@ -1,5 +1,6 @@
 #include "GameState.hpp"
 #include <engine/StateStack.hpp>
+#include <engine/Blackboard.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 

@@ -6,6 +6,7 @@
 #include <engine/StateStack.hpp>
 #include <engine/ResourceCache.hpp>
 #include <engine/Blackboard.hpp>
+#include <engine/Utility.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <memory>
@@ -26,9 +27,10 @@ private:
   TextureCache      mTextures;
   FontCache         mFonts;
   Blackboard        mBBoard;
+  util::Log         mLog;
   Context           mContext;
   StateStack        mStack;
-  sf::Time          mTimeStep;
+  sf::Time          mTimeStep;  
 };
 
 #endif

@@ -18,7 +18,8 @@ private:
   enum class MenuOption : unsigned int
   {
     RESUME = 0u,
-    EXIT = 1u,
+    EXIT_MENU,
+    EXIT,
   };
 
   sf::RectangleShape mBackgroundShape;

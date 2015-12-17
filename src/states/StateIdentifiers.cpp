@@ -11,5 +11,6 @@ StateStrings initStateStrings()
   data.emplace( States::GAMEOVER, std::string( "GAME_OVER" ) );
   data.emplace( States::OPTIONS, std::string( "OPTIONS" ) );
   data.emplace( States::CREDITS, std::string( "CREDITS" ) );
+
   return data;
 }

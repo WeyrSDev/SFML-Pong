@@ -1,5 +1,6 @@
 #include "TitleState.hpp"
 #include <engine/Context.hpp>
+#include <engine/Blackboard.hpp>
 #include <engine/ResourceCache.hpp>
 #include <engine/Utility.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -49,9 +50,7 @@ TitleState::TitleState( StateStack& stack, States id )
 bool TitleState::handleInput( const sf::Event& event )
 {
   if( event.type == getContext()->blackboard->keyEventType ) {
-#ifdef _DEBUG
-    std::cout << "TitleState::handleInput - key pressed event registered" << std::endl;
-#endif
+    getContext()->log->msg( "TitleState::handleInput - event received", util::LogType::DEBUG );
     requestStackPop();
     requestStackPush( States::MENU );
   }

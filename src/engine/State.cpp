@@ -1,9 +1,6 @@
 #include "State.hpp"
 #include "StateStack.hpp"
 #include "Utility.hpp"
-#ifdef _DEBUG
-#include <iostream>
-#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -14,22 +11,12 @@ State::State( StateStack& stack, States id )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-State::~State()
-{
-#ifdef _DEBUG
-  //std::cout << "Destroying state " << mStack->getStateName( mId )
-  //  << std::endl;
-#endif
-}
-
-///////////////////////////////////////////////////////////////////////////////
-
 void State::requestStackPush( States id )
 {  
-#ifdef _DEBUG
-  std::cout << "Requested stack push for state " << mStack->getStateName( id )
-    << std::endl;
-#endif
+  //*getContext()->log << util::Logger::Type::DEBUG
+  //  << "Requested stack push for state " << mStack->getStateName( id ) << "\n";
+  getContext()->log->msg( "Requested stack push for state " + mStack->getStateName( id ),
+                          util::LogType::DEBUG );
   mStack->pushState( id );
 }
 
@@ -37,10 +24,8 @@ void State::requestStackPush( States id )
 
 void State::requestStackPop()
 {  
-#ifdef _DEBUG
-  std::cout << "Requested stack pop for state " << mStack->getStateName( mId )
-    << std::endl;
-#endif
+  getContext()->log->msg( "Requested stack pop for state " + mStack->getStateName( mId ),
+                          util::LogType::DEBUG );
   mStack->popState();
 }
 
@@ -48,10 +33,8 @@ void State::requestStackPop()
 
 void State::requestStackClear()
 {  
-#ifdef _DEBUG
-  std::cout << "Requested stack clear from state " << mStack->getStateName( mId )
-    << std::endl;
-#endif
+  getContext()->log->msg( "Requested stack clear from state " + mStack->getStateName( mId ),
+                          util::LogType::DEBUG );
   mStack->clearStates();
 }
 

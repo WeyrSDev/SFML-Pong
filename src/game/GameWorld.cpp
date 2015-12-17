@@ -1,6 +1,7 @@
 #include "GameWorld.hpp"
 #include <engine/Utility.hpp>
 #include <engine/Context.hpp>
+#include <engine/Blackboard.hpp>
 #include <engine/ResourceCache.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <iostream>
@@ -62,15 +63,17 @@ GameWorld::GameWorld( const Context& context )
   setDebugInfo();
   mDebugInfo.setPosition( 15.f, mWinSize.y - 15.f );
 #endif
+  
+  mContext.log->msg( "GameWorld initialized successfully", util::LogType::DEBUG );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void GameWorld::handleInput( const sf::Event& event )
 {
-#ifdef _DEBUG
-  std::cout << "GameWorld::handleInput() - Tick" << std::endl;
-#endif
+  //*mContext.log << util::Logger::Type::DEBUG
+  //  << "GameWorld::handleInput() - Event received\n";
+  mContext.log->msg( "GameWorld::handleInput() - Event received", util::LogType::DEBUG );
 
   if( event.type == mContext.blackboard->keyEventType ) {
 #ifdef _DEBUG
@@ -297,7 +300,9 @@ void GameWorld::setScoreString()
 ///////////////////////////////////////////////////////////////////////////////
 
 void GameWorld::resetGameBall()
-{
+{  
+  mContext.log->msg( "GameWorld::resetGameBall called", util::LogType::DEBUG );
+
   mGameBall.setPosition( mWinSize / 2.f );
   mBallAngle = util::randomInt( 135, 225 );
   if( mBallAngle > 170 && mBallAngle < 190 ) {

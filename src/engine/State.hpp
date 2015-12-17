@@ -15,7 +15,7 @@ public:
   typedef std::unique_ptr<State> Ptr;
 
   explicit      State( StateStack& stack, States id );
-  virtual       ~State();
+  virtual       ~State() = default;
   virtual bool  handleInput( const sf::Event& event ) = 0;
   virtual bool  update( sf::Time dt ) = 0;
   virtual void  render() = 0;

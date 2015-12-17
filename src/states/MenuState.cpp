@@ -1,5 +1,6 @@
 #include "MenuState.hpp"
 #include <engine/Context.hpp>
+#include <engine/Blackboard.hpp>
 #include <engine/ResourceCache.hpp>
 #include <engine/Utility.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>

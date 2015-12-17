@@ -6,6 +6,7 @@
 #include <states/GameoverState.hpp>
 #include <states/CreditState.hpp>
 #include <SFML/Window/Event.hpp>
+#include <iostream>
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -15,9 +16,10 @@ Application::Application()
   , mTextures()
   , mFonts()
   , mBBoard()
-  , mContext( mWindow, mTextures, mFonts, mBBoard )
+  , mLog( "pong.log", util::LogType::DEBUG )
+  , mContext( mWindow, mTextures, mFonts, mBBoard, mLog )
   , mStack( mContext )
-  , mTimeStep( sf::seconds( 1.f / 60.f ) )
+  , mTimeStep( sf::seconds( 1.f / 60.f ) )  
 {
   mWindow.setKeyRepeatEnabled( false );
   mWindow.setFramerateLimit( 200u );
@@ -40,6 +42,9 @@ Application::Application()
   mStack.registerState<PauseState>( States::PAUSE );
   mStack.registerState<GameoverState>( States::GAMEOVER );
   mStack.registerState<CreditState>( States::CREDITS );
+
+  mLog.msg( "Application initialized successfully", util::LogType::INFO );
+  mLog.msg( "Starting StateStack", util::LogType::INFO );
   mStack.pushState( States::TITLE );
 }
 
@@ -66,6 +71,8 @@ void Application::run()
     mFpsDisplay->update( dt );
     render();    
   }
+
+  mLog.msg( "Shutting down application", util::LogType::INFO );
 }
 
 // end public interface
@@ -75,16 +82,14 @@ void Application::handleInput()
 {
   sf::Event event;
   while( mWindow.pollEvent( event ) ) {
-#ifdef _DEBUG
-    std::cout << "Application::handleInput::pollEvent - Tick" << std::endl;
-#endif
+    mLog.msg( "Application::handleInput() event " + util::eventToString( event.type ) 
+              + " registered", util::LogType::DEBUG );
     mStack.handleInput( event );
 
     if( event.type == sf::Event::Closed ){
       mWindow.close();
     }    
   }
-  //mStack.handleInput( event );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

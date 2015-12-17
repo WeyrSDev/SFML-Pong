@@ -1,5 +1,6 @@
 #include "PauseState.hpp"
 #include <engine/Context.hpp>
+#include <engine/Blackboard.hpp>
 #include <engine/ResourceCache.hpp>
 #include <engine/Utility.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
@@ -13,10 +14,7 @@ PauseState::PauseState( StateStack& stack, States id )
   , mMenu( getContext()->fonts->get( Fonts::C64_Pixel ), 30u, 15u,
            getContext()->blackboard->keyEventType )
 {
-  auto winSize = sf::Vector2f{ static_cast<float>( getContext()->
-                                                   window->getSize().x ),
-                               static_cast<float>( getContext()->
-                                                   window->getSize().y ) };
+  auto winSize = getContext()->window->getView().getSize();
 
   // make background whole screen and half transparent black
   mBackgroundShape.setSize( winSize );  
@@ -34,6 +32,7 @@ PauseState::PauseState( StateStack& stack, States id )
   mMenu.setHighlightColor( sf::Color::Green );
   mMenu.add( "RESUME GAME" );
   mMenu.add( "EXIT TO MENU" );
+  mMenu.add( "EXIT GAME" );
   util::centerOrigin( mMenu );
   mMenu.setPosition( winSize / 2.f );
 }
@@ -54,9 +53,13 @@ bool PauseState::handleInput( const sf::Event& event )
       requestStackPop();
       break;
 
-    case util::to_integral(MenuOption::EXIT):
+    case util::to_integral(MenuOption::EXIT_MENU):
       requestStackClear();
       requestStackPush( States::MENU );
+      break;
+
+    case util::to_integral(MenuOption::EXIT):
+      requestStackClear();
       break;
 
     default:
