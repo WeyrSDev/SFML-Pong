@@ -3,7 +3,7 @@
 #include <random>
 #include <cassert>
 
-namespace util
+namespace core
 {
 ///////////////////////////////////////////////////////////////////////////////
   namespace // anonymous namespace to hide its contents outside this TU
@@ -82,55 +82,6 @@ namespace util
 
 ///////////////////////////////////////////////////////////////////////////////
 
-  Log::Log( std::string logfile, LogType logLevel, std::ostream* opStr )
-    : mFileName( logfile )
-    , mLogFile( mFileName )
-    , mOpStr( opStr )
-    , mLogLevel( logLevel )
-  {
-    if( !mLogFile ) {
-      throw std::runtime_error( "FATAL: Cannot open log file " + mFileName );
-    }
-
-    std::cout << "[INFO] Log level set to "
-      << std::to_string( to_integral( mLogLevel ) ) << std::endl;
-  }
-
-///////////////////////////////////////////////////////////////////////////////
-
-  void Log::msg( sf::String msg, LogType logType )
-  {
-    if( logType > mLogLevel ) {
-      return;
-    }
-
-    std::string val;
-    // TODO: add timestamp to val
-    switch( logType ) {
-      case LogType::INFO:
-        val = "[INFO] ";
-        break;
-
-      case LogType::DEBUG:
-        val = "[DEBUG] ";
-        break;
-
-      case LogType::WARNING:
-        val = "[WARNING] ";
-        break;
-
-      case LogType::ERROR:
-        val = "[ERROR] ";
-        break;
-    }
-
-    val += msg;
-    mLogFile << val << std::endl;
-    *mOpStr << val << std::endl;
-  }
-
-///////////////////////////////////////////////////////////////////////////////
-
   std::string eventToString( sf::Event::EventType type )
   {
     // Macro for easier definition of switch statement
@@ -166,4 +117,4 @@ namespace util
 
 ///////////////////////////////////////////////////////////////////////////////
 
-} // end namespace util
+} // end namespace core

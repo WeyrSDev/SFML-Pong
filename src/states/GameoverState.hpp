@@ -6,10 +6,10 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-class GameoverState : public State
+class GameoverState : public core::State
 {
 public:
-               GameoverState( StateStack& stack, States id );
+               GameoverState( core::StateStack& stack, States id );
   virtual bool handleInput( const sf::Event& event ) override;
   virtual bool update( sf::Time dt ) override;
   virtual void render() override;

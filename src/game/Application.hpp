@@ -1,12 +1,13 @@
 #ifndef APPLICATION_HPP
 #define APPLICATION_HPP
 
+#include "Blackboard.hpp"
 #include <engine/FpsDisplay.hpp>
 #include <engine/Context.hpp>
 #include <engine/StateStack.hpp>
 #include <engine/ResourceCache.hpp>
-#include <engine/Blackboard.hpp>
 #include <engine/Utility.hpp>
+#include <engine/LogSystem.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Font.hpp>
 #include <memory>
@@ -23,13 +24,13 @@ private:
   void              render();
 
   sf::RenderWindow  mWindow;
-  std::unique_ptr<FpsDisplay> mFpsDisplay;
+  std::unique_ptr<core::FpsDisplay> mFpsDisplay;
   TextureCache      mTextures;
   FontCache         mFonts;
   Blackboard        mBBoard;
-  util::Log         mLog;
-  Context           mContext;
-  StateStack        mStack;
+  core::LogSystem         mLog;
+  core::Context           mContext;
+  core::StateStack        mStack;
   sf::Time          mTimeStep;  
 };
 

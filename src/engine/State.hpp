@@ -6,6 +6,9 @@
 #include <SFML/System/Time.hpp>
 #include <memory>
 
+namespace core
+{
+
 class StateStack;
 struct Context;
 
@@ -34,4 +37,5 @@ private:
   State& operator=( const State& ) = delete;
 };
 
+} // end namespace core
 #endif

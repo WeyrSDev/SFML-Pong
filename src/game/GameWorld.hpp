@@ -12,7 +12,7 @@
 class GameWorld
 {
 public:
-  explicit GameWorld( const Context& context );
+  explicit GameWorld( const core::Context& context );
   void handleInput( const sf::Event& event );
   void handleRealtimeInput();
   void update( sf::Time dt );
@@ -25,7 +25,7 @@ private:
   void setDebugInfo();
 #endif
 
-  Context mContext;
+  core::Context mContext;
   sf::Vector2f mWinSize;
   sf::RectangleShape mPlayer;
   sf::RectangleShape mEnemy;

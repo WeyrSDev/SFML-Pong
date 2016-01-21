@@ -7,10 +7,10 @@
 #include <vector>
 #include <memory>
 
-class TitleState : public State
+class TitleState : public core::State
 {
 public:
-               TitleState( StateStack& stack, States id );
+               TitleState( core::StateStack& stack, States id );
 
   virtual bool handleInput( const sf::Event& event ) override;
   virtual bool update( sf::Time dt ) override;

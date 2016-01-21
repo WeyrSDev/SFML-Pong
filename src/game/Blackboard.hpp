@@ -5,15 +5,15 @@
 
 struct Blackboard
 {
+  bool gameOver;
+  bool playerWon;
+  sf::Event::EventType keyEventType;
+
   Blackboard()
     : gameOver( false )
     , playerWon( false )
     , keyEventType( sf::Event::KeyReleased )
   {}
-
-  bool gameOver;
-  bool playerWon;
-  sf::Event::EventType keyEventType;
 };
 
 #endif

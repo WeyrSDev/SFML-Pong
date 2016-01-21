@@ -13,6 +13,8 @@ namespace sf
   class Time;
 }
 
+namespace core
+{
 // Simple framerate display for SFML applications
 // stores only a reference of sf::Font, so font must
 // be alive for the life time of FpsDisplay
@@ -24,7 +26,7 @@ public:
   FpsDisplay( const sf::Font& font, unsigned int size = 12u );
 
   // explicit default deconstructor needed cause of unique_ptr-member
-  ~FpsDisplay();
+  ~FpsDisplay() = default;
 
   // update with a valid sf::Time object
   // needs to be called every frame of the sfml window
@@ -47,4 +49,5 @@ private:
   FpsDisplay& operator=( const FpsDisplay& ) = delete;
 };
 
+} // end namespace core
 #endif

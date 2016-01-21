@@ -16,7 +16,7 @@ Application::Application()
   , mTextures()
   , mFonts()
   , mBBoard()
-  , mLog( "pong.log", util::LogType::DEBUG )
+  , mLog( "pong.log", core::LogType::DEBUG )
   , mContext( mWindow, mTextures, mFonts, mBBoard, mLog )
   , mStack( mContext )
   , mTimeStep( sf::seconds( 1.f / 60.f ) )  
@@ -25,15 +25,15 @@ Application::Application()
   mWindow.setFramerateLimit( 200u );
   mWindow.setMouseCursorVisible( false );
 
+  mTextures.load( Textures::TITLE_BG, "../data/gfx/title-bg.png" );
+  mFonts.load( Fonts::SDS_8BIT, "../data/fonts/SDS_8BIT.ttf" );
+  mFonts.load( Fonts::C64_Pixel, "../data/fonts/C64-Pixel.ttf" );
+  mFonts.load( Fonts::MONOSPACE, "../data/fonts/DejaVuSansMono.ttf" );
+  mFonts.load( Fonts::DP_COMIC, "../data/fonts/dpcomic.ttf" );
+
   mBBoard.keyEventType = sf::Event::EventType::KeyReleased;
 
-  mFonts.load( Fonts::SDS_8BIT, "../media/fonts/SDS_8BIT.ttf" );
-  mFonts.load( Fonts::C64_Pixel, "../media/fonts/C64-Pixel.ttf" );
-  mFonts.load( Fonts::MONOSPACE, "../media/fonts/DejaVuSansMono.ttf" );
-  mFonts.load( Fonts::DP_COMIC, "../media/fonts/dpcomic.ttf" );
-  mTextures.load( Textures::TITLE_BG, "../media/gfx/title-bg.png" );
-
-  mFpsDisplay = std::make_unique<FpsDisplay>( mFonts.get( Fonts::MONOSPACE ) );
+  mFpsDisplay = std::make_unique<core::FpsDisplay>( mFonts.get( Fonts::MONOSPACE ) );
   mFpsDisplay->setPosition( 10.f, 10.f );
 
   mStack.registerState<TitleState>( States::TITLE );
@@ -43,8 +43,8 @@ Application::Application()
   mStack.registerState<GameoverState>( States::GAMEOVER );
   mStack.registerState<CreditState>( States::CREDITS );
 
-  mLog.msg( "Application initialized successfully", util::LogType::INFO );
-  mLog.msg( "Starting StateStack", util::LogType::INFO );
+  mLog.write( "Application initialized successfully", core::LogType::INFO );
+  mLog.write( "Starting StateStack", core::LogType::INFO );
   mStack.pushState( States::TITLE );
 }
 
@@ -72,7 +72,7 @@ void Application::run()
     render();    
   }
 
-  mLog.msg( "Shutting down application", util::LogType::INFO );
+  mLog.write( "Shutting down application", core::LogType::INFO );
 }
 
 // end public interface
@@ -82,8 +82,8 @@ void Application::handleInput()
 {
   sf::Event event;
   while( mWindow.pollEvent( event ) ) {
-    mLog.msg( "Application::handleInput() event " + util::eventToString( event.type ) 
-              + " registered", util::LogType::DEBUG );
+    mLog.write( "Application::handleInput() event " + core::eventToString( event.type ) 
+              + " registered", core::LogType::DEBUG );
     mStack.handleInput( event );
 
     if( event.type == sf::Event::Closed ){

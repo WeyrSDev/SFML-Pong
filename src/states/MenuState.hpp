@@ -8,10 +8,10 @@
 #include <vector>
 #include <memory>
 
-class MenuState : public State
+class MenuState : public core::State
 {
 public:
-               MenuState( StateStack& stack, States id );
+               MenuState( core::StateStack& stack, States id );
   virtual bool handleInput( const sf::Event& event ) override;
   virtual bool update( sf::Time dt ) override;
   virtual void render() override;
@@ -19,10 +19,10 @@ public:
 private:
   enum class MenuOption : unsigned int
   {
-    PLAY = 0u,
+    PLAY    = 0u,
     OPTIONS = 1u,
     CREDITS = 2u,
-    EXIT = 3u,
+    EXIT    = 3u,
   };
 
   TextMenu   mMenu;

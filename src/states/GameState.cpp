@@ -1,10 +1,10 @@
 #include "GameState.hpp"
 #include <engine/StateStack.hpp>
-#include <engine/Blackboard.hpp>
+#include <game/Blackboard.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GameState::GameState( StateStack& stack, States id )
+GameState::GameState( core::StateStack& stack, States id )
   : State( stack, id )
   , mWorld( *stack.getContext() )
 {

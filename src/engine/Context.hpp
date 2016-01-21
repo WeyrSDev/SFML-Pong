@@ -3,34 +3,33 @@
 
 #include <game/ResourceIdentifiers.hpp>
 
+struct Blackboard;
 namespace sf
 {
   class RenderWindow;
 }
 
-namespace util
+namespace core
 {
-  class Log;
-}
+  class LogSystem;  
 
-struct Blackboard;
+  struct Context
+  {
+    Context( sf::RenderWindow& window, TextureCache& textures, FontCache& fonts,
+             Blackboard& bboard, LogSystem& log )
+      : window( &window )
+      , textures( &textures )
+      , fonts( &fonts )
+      , blackboard( &bboard )
+      , log( &log )
+    {}
 
-struct Context
-{
-  Context( sf::RenderWindow& window, TextureCache& textures, FontCache& fonts,
-           Blackboard& bboard, util::Log& log )
-    : window( &window )
-    , textures( &textures )
-    , fonts( &fonts )
-    , blackboard( &bboard )
-    , log( &log )
-  {}
+    sf::RenderWindow*   window;
+    TextureCache*       textures;
+    FontCache*          fonts;
+    Blackboard*         blackboard;
+    LogSystem*          log;
+  };
 
-  sf::RenderWindow* window;
-  TextureCache* textures;
-  FontCache* fonts;
-  Blackboard* blackboard;
-  util::Log* log;
-};
-
+} // end namespace core
 #endif

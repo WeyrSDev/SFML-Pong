@@ -1,5 +1,5 @@
-#ifndef UTILITY_HPP
-#define UTILITY_HPP
+#ifndef CORE_UTILITY_HPP
+#define CORE_UTILITY_HPP
 
 #include <SFML/System/Vector2.hpp>
 #include <SFML/System/String.hpp>
@@ -10,7 +10,7 @@
 #include <iostream>
 
 // provides utility functions and classes
-namespace util
+namespace core
 {
   // create a random int between min and max (inclusive)
   int randomInt( int min, int max );
@@ -42,41 +42,11 @@ namespace util
   template<typename T>
   constexpr auto to_integral( T t ) -> typename std::underlying_type<T>::type;
 
-  // enumeration used to determine type of log message
-  // also used for height of log level, the higher the more verbose
-  enum class LogType : unsigned int
-  {
-    NONE = 0u,
-    ERROR = 1u,
-    WARNING = 2u,
-    INFO = 3u,
-    DEBUG = 4u,
-  };
-
-  class Log
-  {
-  public:
-    explicit Log( std::string logfile, LogType logLevel = LogType::ERROR,
-                  std::ostream* opStr = &std::cout );
-
-    void msg( sf::String msg, LogType type = LogType::ERROR );
-
-  private:
-    std::string mFileName;
-    std::ofstream mLogFile;
-    std::ostream* mOpStr;
-    LogType mLogLevel;
-
-
-    Log( const Log& ) = delete;
-    Log& operator=( const Log& ) = delete;
-  };
-
   // get a string representation of the given event type
   std::string eventToString( sf::Event::EventType type );
 
 
 #include "Utility.inl"
 
-} // end namespace util
+} // end namespace core
 #endif

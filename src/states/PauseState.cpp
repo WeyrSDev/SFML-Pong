@@ -1,13 +1,13 @@
 #include "PauseState.hpp"
 #include <engine/Context.hpp>
-#include <engine/Blackboard.hpp>
+#include <game/Blackboard.hpp>
 #include <engine/ResourceCache.hpp>
 #include <engine/Utility.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 
-PauseState::PauseState( StateStack& stack, States id )
+PauseState::PauseState( core::StateStack& stack, States id )
   : State( stack, id )
   , mBackgroundShape()
   , mPauseText()
@@ -26,14 +26,14 @@ PauseState::PauseState( StateStack& stack, States id )
   mPauseText.setCharacterSize( 40u );
   mPauseText.setString( "GAME PAUSED" );
   mPauseText.setColor( sf::Color::Green );
-  util::centerOrigin( mPauseText );
+  core::centerOrigin( mPauseText );
   mPauseText.setPosition( winSize.x / 2.f, 75.f );
 
   mMenu.setHighlightColor( sf::Color::Green );
   mMenu.add( "RESUME GAME" );
   mMenu.add( "EXIT TO MENU" );
   mMenu.add( "EXIT GAME" );
-  util::centerOrigin( mMenu );
+  core::centerOrigin( mMenu );
   mMenu.setPosition( winSize / 2.f );
 }
 
@@ -49,16 +49,16 @@ bool PauseState::handleInput( const sf::Event& event )
 
   int menuResult = mMenu.handleInput( event );
   switch( menuResult ) {
-    case util::to_integral(MenuOption::RESUME):
+    case core::to_integral(MenuOption::RESUME):
       requestStackPop();
       break;
 
-    case util::to_integral(MenuOption::EXIT_MENU):
+    case core::to_integral(MenuOption::EXIT_MENU):
       requestStackClear();
       requestStackPush( States::MENU );
       break;
 
-    case util::to_integral(MenuOption::EXIT):
+    case core::to_integral(MenuOption::EXIT):
       requestStackClear();
       break;
 

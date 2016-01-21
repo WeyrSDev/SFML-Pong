@@ -1,7 +1,8 @@
 #include "CreditState.hpp"
 #include <engine/Utility.hpp>
+#include <engine/LogSystem.hpp>
 #include <engine/Context.hpp>
-#include <engine/Blackboard.hpp>
+#include <game/Blackboard.hpp>
 #include <engine/ResourceCache.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -9,7 +10,7 @@
 #include <fstream>
 #include <sstream>
 
-CreditState::CreditState( StateStack & stack, States id )
+CreditState::CreditState( core::StateStack & stack, States id )
   : State( stack, id )
 {
   auto winSize = getContext()->window->getView().getSize();
@@ -18,28 +19,29 @@ CreditState::CreditState( StateStack & stack, States id )
   mDrawObjects.push_back( std::move( bgSprite ) );
 
   auto statusText = std::make_unique<sf::Text>
-    ( "Press ESC to return to menu",
-      getContext()->fonts->get( Fonts::DP_COMIC ),
-      24u );
-  util::centerOrigin( *statusText );
+    ( "Press ESC to return to menu", getContext()->fonts->get( Fonts::DP_COMIC ), 24u );
+  core::centerOrigin( *statusText );
   statusText->setPosition( winSize.x / 2.f, winSize.y - 30.f );
   mDrawObjects.push_back( std::move( statusText ) );
 
-  std::string creditsFilename { "../media/credits.txt" };
+  std::string creditsFilename { "../data/credits.txt" };
   std::ifstream creditsFile( creditsFilename );
+  sf::String creditsText { "" };
   if( !creditsFile.is_open() ) {
-    throw std::runtime_error( "Error opening file " + creditsFilename );
-  }
-  std::stringstream content;
-  content << creditsFile.rdbuf();
-  creditsFile.close();
-  sf::String creditsText = content.str();
+    // throwing here is unnecessary because we can continue without this file
+    //throw std::runtime_error( "Error opening file " + creditsFilename );
+    creditsText = "Error: File " + creditsFilename + " not found";
+    getContext()->log->write( "File " + creditsFilename + " not found" );
+  } else {
+    std::stringstream content;
+    content << creditsFile.rdbuf();
+    creditsFile.close();
+    creditsText = content.str();
+  }  
 
   auto credits = std::make_unique<sf::Text>
-    ( creditsText,
-      getContext()->fonts->get( Fonts::MONOSPACE ),
-      18u );
-  util::centerOrigin( *credits );
+    ( creditsText, getContext()->fonts->get( Fonts::MONOSPACE ), 18u );
+  core::centerOrigin( *credits );
   credits->setPosition( winSize / 2.f );
   mDrawObjects.push_back( std::move( credits ) );
 }

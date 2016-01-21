@@ -1,14 +1,15 @@
 #include "GameWorld.hpp"
 #include <engine/Utility.hpp>
 #include <engine/Context.hpp>
-#include <engine/Blackboard.hpp>
+#include <game/Blackboard.hpp>
 #include <engine/ResourceCache.hpp>
+#include <engine/LogSystem.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <iostream>
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GameWorld::GameWorld( const Context& context )
+GameWorld::GameWorld( const core::Context& context )
   : mContext( context )
   , mWinSize()
   , mPlayer( { 20.f, 100.f } )
@@ -54,7 +55,7 @@ GameWorld::GameWorld( const Context& context )
   mScoreText.setCharacterSize( 30u );
   mScoreText.setColor( sf::Color::Green );
   setScoreString();
-  util::centerOrigin( mScoreText );
+  core::centerOrigin( mScoreText );
   mScoreText.setPosition( mWinSize.x / 2.f, mScoreText.getOrigin().y + 5.f );
 
 #ifdef _DEBUG
@@ -64,25 +65,23 @@ GameWorld::GameWorld( const Context& context )
   mDebugInfo.setPosition( 15.f, mWinSize.y - 15.f );
 #endif
   
-  mContext.log->msg( "GameWorld initialized successfully", util::LogType::DEBUG );
+  mContext.log->write( "GameWorld initialized successfully", core::LogType::DEBUG );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
 void GameWorld::handleInput( const sf::Event& event )
 {
-  //*mContext.log << util::Logger::Type::DEBUG
-  //  << "GameWorld::handleInput() - Event received\n";
-  mContext.log->msg( "GameWorld::handleInput() - Event received", util::LogType::DEBUG );
+  mContext.log->write( "GameWorld::handleInput() - Event received", core::LogType::DEBUG );
 
   if( event.type == mContext.blackboard->keyEventType ) {
 #ifdef _DEBUG
     if( event.key.code == sf::Keyboard::F1 ) {
-      mToggleBallMove = !mToggleBallMove; // toggle ball movement
-    }
-    if( event.key.code == sf::Keyboard::F2 ) {
       mShowDebugInfo = !mShowDebugInfo; // toggle debug info on/off
     }
+    if( event.key.code == sf::Keyboard::F2 ) {
+      mToggleBallMove = !mToggleBallMove; // toggle ball movement
+    }    
     if( event.key.code == sf::Keyboard::F3 ) {
       mSingleFrameMode = !mSingleFrameMode; // toggle single frame mode on/off
     }
@@ -115,7 +114,7 @@ void GameWorld::update( const sf::Time dt )
     setDebugInfo();
   }
   // if we are in single frame mode and no single frame step has been requested
-  // just abort update completly
+  // just abort update completly, so nothing happens
   // otherwise continue and reset single frame step variable
   if( mSingleFrameMode && !mSingleFrameStep ) {
     return;
@@ -140,7 +139,7 @@ void GameWorld::update( const sf::Time dt )
     return; // if not 2 seconds have passed immediatly cancel update
   }
 
-  auto vector = util::toVector( util::degToRad( static_cast<float>( mBallAngle ) ) );
+  auto vector = core::toVector( core::degToRad( static_cast<float>( mBallAngle ) ) );
   auto ballMove = vector * mBallSpeed * dt.asSeconds();
   auto ballGBounds = mGameBall.getGlobalBounds();
   auto playerGBounds = mPlayer.getGlobalBounds();
@@ -154,8 +153,8 @@ void GameWorld::update( const sf::Time dt )
     float c = ballGBounds.top;
     auto beta = 360.f - ( static_cast<float>( mBallAngle ) + 90.f );
     auto gamma = 90.f - beta;
-    auto b_new = std::sin( util::degToRad( beta ) ) *
-                 ( c / std::sin( util::degToRad( gamma ) ) );
+    auto b_new = std::sin( core::degToRad( beta ) ) *
+                 ( c / std::sin( core::degToRad( gamma ) ) );
     ballMove.x = -b_new;
     ballMove.y = -c;
     mGameBall.move( ballMove );
@@ -163,7 +162,7 @@ void GameWorld::update( const sf::Time dt )
   } else if( ballGBounds.top + ballGBounds.height + ballMove.y >= mWinSize.y ) {
     float c = mWinSize.y - ( ballGBounds.top + ballGBounds.height );
     auto gamma = 90.f - ( static_cast<float>( mBallAngle ) - 90.f );
-    auto a_new = c / std::sin( util::degToRad( gamma ) );
+    auto a_new = c / std::sin( core::degToRad( gamma ) );
     ballMove.x = -a_new;
     ballMove.y = c;
     mGameBall.move( ballMove );
@@ -181,13 +180,13 @@ void GameWorld::update( const sf::Time dt )
     mBallSpeed += mBallAcceleration;
     // adding a friction to the ball based on paddle movement
     if( mBallAngle < 180 && mMoveUp ) {
-      mBallAngle = 360 + ( 180 - mBallAngle ) - util::randomInt( 5, 10 );
+      mBallAngle = 360 + ( 180 - mBallAngle ) - core::randomInt( 5, 10 );
     } else if( mBallAngle < 180 && mMoveDown ) {
-      mBallAngle = 360 + ( 180 - mBallAngle ) + util::randomInt( 5, 10 );
+      mBallAngle = 360 + ( 180 - mBallAngle ) + core::randomInt( 5, 10 );
     } else if( mBallAngle > 180 && mMoveUp ) {
-      mBallAngle = 360 + ( 180 - mBallAngle ) - util::randomInt( 5, 10 );
+      mBallAngle = 360 + ( 180 - mBallAngle ) - core::randomInt( 5, 10 );
     } else if( mBallAngle >180 && mMoveDown ) {
-      mBallAngle = 360 + ( 180 - mBallAngle ) + util::randomInt( 5, 10 );
+      mBallAngle = 360 + ( 180 - mBallAngle ) + core::randomInt( 5, 10 );
     } else {
       mBallAngle = 360 + ( 180 - mBallAngle );
     }
@@ -201,7 +200,7 @@ void GameWorld::update( const sf::Time dt )
   }
 
   // after all modifications to ball angle normalize it to be between 0 and 360
-  mBallAngle = util::normalizeAngle( mBallAngle );
+  mBallAngle = core::normalizeAngle( mBallAngle );
 
   // move player paddle
   // pre calculate the target of movement before actual movement
@@ -301,15 +300,15 @@ void GameWorld::setScoreString()
 
 void GameWorld::resetGameBall()
 {  
-  mContext.log->msg( "GameWorld::resetGameBall called", util::LogType::DEBUG );
+  mContext.log->write( "GameWorld::resetGameBall called", core::LogType::DEBUG );
 
   mGameBall.setPosition( mWinSize / 2.f );
-  mBallAngle = util::randomInt( 135, 225 );
+  mBallAngle = core::randomInt( 135, 225 );
   if( mBallAngle > 170 && mBallAngle < 190 ) {
     if( mBallAngle < 180 ) {
-      mBallAngle -= util::randomInt( 7, 12 );
+      mBallAngle -= core::randomInt( 7, 12 );
     } else {
-      mBallAngle += util::randomInt( 7, 12 );
+      mBallAngle += core::randomInt( 7, 12 );
     }
   }
   mBallSpeed = mBallStartSpeed;

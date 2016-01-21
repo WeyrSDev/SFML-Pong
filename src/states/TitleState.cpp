@@ -1,14 +1,15 @@
 #include "TitleState.hpp"
 #include <engine/Context.hpp>
-#include <engine/Blackboard.hpp>
+#include <game/Blackboard.hpp>
 #include <engine/ResourceCache.hpp>
 #include <engine/Utility.hpp>
+#include <engine/LogSystem.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <iostream>
 
 ///////////////////////////////////////////////////////////////////////////////
 
-TitleState::TitleState( StateStack& stack, States id )
+TitleState::TitleState( core::StateStack& stack, States id )
   : State( stack, id )
   , mStartText()
   , mShowText( true )
@@ -23,7 +24,7 @@ TitleState::TitleState( StateStack& stack, States id )
   mStartText.setString( "< Press any key to start >" );
   mStartText.setCharacterSize( 24u );
   mStartText.setColor( sf::Color::Green );
-  util::centerOrigin( mStartText );
+  core::centerOrigin( mStartText );
   mStartText.setPosition( winSize / 2.f );
 
   auto bgSprite = std::make_unique<sf::Sprite>
@@ -33,14 +34,14 @@ TitleState::TitleState( StateStack& stack, States id )
   auto title = std::make_unique<sf::Text>
     ( "P O N G", font, 100u );
   title->setColor( sf::Color::Green );
-  util::centerOrigin( *title );
+  core::centerOrigin( *title );
   title->setPosition( winSize.x / 2.f, 100.f );
   mDrawObjects.push_back( std::move( title ) );
   
   auto nameText = std::make_unique<sf::Text>
     ( "created by Sebastian 'SeriousITGuy' Brack",
       getContext()->fonts->get( Fonts::DP_COMIC ), 24u );
-  util::centerOrigin( *nameText );
+  core::centerOrigin( *nameText );
   nameText->setPosition( winSize.x / 2.f, winSize.y - 30.f );
   mDrawObjects.push_back( std::move( nameText ) );
 }
@@ -50,7 +51,7 @@ TitleState::TitleState( StateStack& stack, States id )
 bool TitleState::handleInput( const sf::Event& event )
 {
   if( event.type == getContext()->blackboard->keyEventType ) {
-    getContext()->log->msg( "TitleState::handleInput - event received", util::LogType::DEBUG );
+    getContext()->log->write( "TitleState::handleInput - event received", core::LogType::DEBUG );
     requestStackPop();
     requestStackPush( States::MENU );
   }

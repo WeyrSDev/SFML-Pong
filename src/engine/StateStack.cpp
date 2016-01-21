@@ -1,10 +1,14 @@
 #include "StateStack.hpp"
 #include "Utility.hpp"
+#include "LogSystem.hpp"
 #include <cassert>
 #include <algorithm>
 #ifdef _DEBUG
 #include <iostream>
 #endif
+
+namespace core
+{
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -53,7 +57,7 @@ void StateStack::render()
 void StateStack::pushState( States id )
 {
   mPendingChanges.push_back( PendingChange( Action::PUSH, id ) );
-  mContext->log->msg( "state changed to " + getStateName( id ), util::LogType::DEBUG );
+  mContext->log->write( "state changed to " + getStateName( id ), LogType::DEBUG );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -90,8 +94,8 @@ std::string StateStack::getStateName( States id ) const
   if( name != std::end( mStateStrings ) ) {
     return name->second;
   } else {
-    return std::string("NAME NOT FOUND");
-  }    
+    return std::string( "NAME NOT FOUND" );
+  }
 }
 
 // end public interface
@@ -129,3 +133,5 @@ void StateStack::applyPendingChanges()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+} // end namespace core

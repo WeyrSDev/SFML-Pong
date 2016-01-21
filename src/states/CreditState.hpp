@@ -9,10 +9,10 @@ namespace sf
   class Drawable;
 }
 
-class CreditState : public State
+class CreditState : public core::State
 {
 public:
-               CreditState( StateStack& stack, States id );
+               CreditState( core::StateStack& stack, States id );
   virtual bool handleInput( const sf::Event& event ) override;
   virtual bool update( sf::Time dt ) override;
   virtual void render() override;

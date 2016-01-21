@@ -4,8 +4,8 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/System/Time.hpp>
 
-///////////////////////////////////////////////////////////////////////////////
-
+namespace core
+{
 // Hidden implementation class of FpsDisplay
 // constructor must be called by contructor of FpsDisplay
 class FpsDisplay::Impl
@@ -15,18 +15,18 @@ public:
   void update( const sf::Time dt );
 
   sf::Text mFpsText;
+  sf::Time mFpsTime;
   std::size_t mFrames;
   std::size_t mFps;
-  sf::Time mFpsTime;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
 
 FpsDisplay::Impl::Impl( const sf::Font& font, unsigned int size )
   : mFpsText( "0 fps", font, size )
-  , mFrames( 0 )
-  , mFps( 0 )
   , mFpsTime( sf::Time::Zero )
+  , mFrames( 0 )
+  , mFps( 0 )  
 {}
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -53,9 +53,9 @@ FpsDisplay::FpsDisplay( const sf::Font& font, unsigned int size )
 ///////////////////////////////////////////////////////////////////////////////
 
 // explicit default destructor is needed that the unique_ptr-member
-// can be deconstructed
-FpsDisplay::~FpsDisplay()
-{}
+// can be deconstructed, defaulting doesn't work here
+//FpsDisplay::~FpsDisplay()
+//{}
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -75,3 +75,5 @@ void FpsDisplay::draw( sf::RenderTarget& target, sf::RenderStates states ) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+} // end namespace core

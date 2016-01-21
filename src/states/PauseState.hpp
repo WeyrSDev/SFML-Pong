@@ -6,10 +6,10 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 
-class PauseState : public State
+class PauseState : public core::State
 {
 public:
-               PauseState( StateStack& stack, States id );
+               PauseState( core::StateStack& stack, States id );
 
   virtual bool handleInput( const sf::Event& event ) override;
   virtual bool update( sf::Time dt ) override;
