@@ -10,6 +10,8 @@
 #include <cassert>
 #include <iostream>
 
+namespace core
+{
 ///////////////////////////////////////////////////////////////////////////////
 
 class TextMenu::Impl
@@ -69,7 +71,7 @@ void TextMenu::Impl::ensureGeometryUpdate()
 
   // update text size for all menu entries
   for( auto& entry : mEntries ) {
-    entry.setCharacterSize( mTextSize );    
+    entry.setCharacterSize( mTextSize );
   }
 
   // calculate new bounding rectangle
@@ -94,7 +96,7 @@ void TextMenu::Impl::ensureGeometryUpdate()
     }
   }
   mBounds.width = maxXSize;
-  
+
   // set Alignment and origins of every entry
   std::size_t i { 0 };
   for( auto& entry : mEntries ) {
@@ -114,7 +116,7 @@ void TextMenu::Impl::ensureGeometryUpdate()
     }
 
     entry.setOrigin( xOrigin, 0.f );
-    entry.setPosition( xPos , static_cast<float>( i * 
+    entry.setPosition( xPos, static_cast<float>( i *
                        ( mTextSize + mSpacing ) ) );
     ++i;
   }
@@ -317,7 +319,7 @@ sf::FloatRect TextMenu::getLocalBounds() const
 
 sf::FloatRect TextMenu::getGlobalBounds() const
 {
-  return getTransform().transformRect( getLocalBounds() );  
+  return getTransform().transformRect( getLocalBounds() );
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -340,3 +342,5 @@ void TextMenu::draw( sf::RenderTarget & target, sf::RenderStates states ) const
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+} // end namespace core

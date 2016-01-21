@@ -25,7 +25,7 @@ private:
     EXIT    = 3u,
   };
 
-  TextMenu   mMenu;
+  core::TextMenu   mMenu;
   std::vector<std::unique_ptr<sf::Drawable>> mDrawObjects;
 };
 

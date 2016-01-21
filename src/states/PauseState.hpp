@@ -24,7 +24,7 @@ private:
 
   sf::RectangleShape mBackgroundShape;
   sf::Text mPauseText;
-  TextMenu mMenu;
+  core::TextMenu mMenu;
 };
 
 

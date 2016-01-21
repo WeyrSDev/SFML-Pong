@@ -16,6 +16,8 @@ namespace sf
   class String;
 }
 
+namespace core
+{
 // Class for a complete but simple to use text menu
 // returns selected menu index when Return is pressed
 // or -1 of Return has not been pressed
@@ -72,7 +74,7 @@ public:
 
 private:
   // override of sf::Drawable::draw()
-  virtual void draw( sf::RenderTarget& target, sf::RenderStates states ) 
+  virtual void draw( sf::RenderTarget& target, sf::RenderStates states )
     const override;
 
   // forward declaration of private class
@@ -86,4 +88,5 @@ private:
   TextMenu& operator=( const TextMenu& ) = delete;
 };
 
+} // end namespace core
 #endif

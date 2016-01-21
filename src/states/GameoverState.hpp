@@ -24,7 +24,7 @@ private:
 
   sf::Sprite mBackgroundSprite;
   sf::Text mGameoverText;
-  TextMenu mMenu;
+  core::TextMenu mMenu;
 };
 
 #endif
