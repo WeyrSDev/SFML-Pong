@@ -51,7 +51,7 @@ TitleState::TitleState( core::StateStack& stack, States id )
 bool TitleState::handleInput( const sf::Event& event )
 {
   if( event.type == getContext()->blackboard->keyEventType ) {
-    getContext()->log->write( "TitleState::handleInput - event received", core::LogType::DEBUG );
+    //getContext()->log->write( "TitleState::handleInput - event received", core::LogType::DEBUG );
     requestStackPop();
     requestStackPush( States::MENU );
   }

@@ -12,11 +12,11 @@
 
 Application::Application()
   : mWindow( { 1000, 600 }, "Pong for #1GAM", sf::Style::Close )
-  , mFpsDisplay( nullptr )
-  , mTextures()
-  , mFonts()
-  , mBBoard()
   , mLog( "pong.log", core::LogType::DEBUG )
+  , mFpsDisplay( nullptr )
+  , mTextures( &mLog )
+  , mFonts( &mLog )
+  , mBBoard()
   , mContext( mWindow, mTextures, mFonts, mBBoard, mLog )
   , mStack( mContext )
   , mTimeStep( sf::seconds( 1.f / 60.f ) )  
@@ -32,6 +32,8 @@ Application::Application()
   mFonts.load( Fonts::DP_COMIC, "../data/fonts/dpcomic.ttf" );
 
   mBBoard.keyEventType = sf::Event::EventType::KeyReleased;
+  mLog.write( "keyEventType set to " + core::eventToString( mBBoard.keyEventType ),
+              core::LogType::INFO );
 
   mFpsDisplay = std::make_unique<core::FpsDisplay>( mFonts.get( Fonts::MONOSPACE ) );
   mFpsDisplay->setPosition( 10.f, 10.f );
@@ -82,8 +84,10 @@ void Application::handleInput()
 {
   sf::Event event;
   while( mWindow.pollEvent( event ) ) {
-    mLog.write( "Application::handleInput() event " + core::eventToString( event.type ) 
-              + " registered", core::LogType::DEBUG );
+    if( filterEvent( event.type ) ) {
+      mLog.write( "Application::handleInput() event " + core::eventToString( event.type )
+                  + " registered", core::LogType::DEBUG );
+    }
     mStack.handleInput( event );
 
     if( event.type == sf::Event::Closed ){
@@ -107,6 +111,28 @@ void Application::render()
   mStack.render();
   mWindow.draw( *mFpsDisplay );
   mWindow.display();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+// checking for events we are interested in
+// returns true for interesting events
+// otherwise returns false
+bool Application::filterEvent( sf::Event::EventType eventType )
+{
+  switch( eventType ) {
+    case sf::Event::EventType::MouseMoved:
+    case sf::Event::EventType::MouseButtonPressed:
+    case sf::Event::EventType::MouseButtonReleased:
+    case sf::Event::EventType::MouseEntered:
+    case sf::Event::EventType::MouseLeft:
+    case sf::Event::EventType::MouseWheelMoved:
+    case sf::Event::EventType::MouseWheelScrolled:
+    case sf::Event::EventType::TextEntered:
+      return false;
+    default:
+      return true;
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////

@@ -3,9 +3,6 @@
 #include "LogSystem.hpp"
 #include <cassert>
 #include <algorithm>
-#ifdef _DEBUG
-#include <iostream>
-#endif
 
 namespace core
 {
@@ -57,7 +54,7 @@ void StateStack::render()
 void StateStack::pushState( States id )
 {
   mPendingChanges.push_back( PendingChange( Action::PUSH, id ) );
-  mContext->log->write( "state changed to " + getStateName( id ), LogType::DEBUG );
+  mContext->log->write( "state changed to " + getStateName( id ), LogType::INFO );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

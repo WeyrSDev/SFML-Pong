@@ -12,10 +12,10 @@ LogSystem::LogSystem( std::string logfile, LogType logLevel, std::ostream* opStr
   , mLogLevel( logLevel )
 {
   if( !mLogFile ) {
-    throw std::runtime_error( "FATAL: Cannot open log file " + mFileName );
+    throw std::runtime_error( "[FATAL] Cannot open log file " + mFileName );
   }
-
-  std::string header { "[INFO] Log level set to " + std::to_string( to_integral( mLogLevel ) ) };
+  std::string header { "[INFO] Starting up log system\n" };
+  header += "[INFO] Log level set to " + std::to_string( to_integral( mLogLevel ) );
   mLogFile << header << std::endl;
   *mOpStr << header << std::endl;
 }
@@ -48,7 +48,7 @@ void LogSystem::write( sf::String msg, LogType logType )
       break;
 
     case LogType::FATAL:
-      val = "[FATAL]";
+      val = "[FATAL] ";
       break;
   }
 

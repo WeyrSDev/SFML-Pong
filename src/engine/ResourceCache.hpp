@@ -1,18 +1,29 @@
-#ifndef RESOURCECACHE_HPP
-#define RESOURCECACHE_HPP
+#ifndef CORE_RESOURCECACHE_HPP
+#define CORE_RESOURCECACHE_HPP
 
+//#include "LogSystem.hpp"
 #include <map>
 #include <memory>
 #include <stdexcept>
 #include <cassert>
+#include <type_traits>
 
-//namespace core
-//{
+namespace core
+{
 
 template <typename Resource, typename Identifier>
 class ResourceCache
 {
 public:
+  explicit ResourceCache( LogSystem* log ) 
+    : mLog( log )
+  {
+    if( mLog != nullptr ) {
+      mLog->write( "Starting Resource Cache for " + std::string( typeid( Resource ).name() ),
+                   LogType::INFO );
+    }
+  }
+
   void load( Identifier id, const sf::String& filename );
   template <typename Parameter>
   void load( Identifier id, const sf::String& filename, const Parameter& param );
@@ -22,10 +33,11 @@ public:
 private:
   void insertResource( Identifier id, std::unique_ptr<Resource> resource );
   std::map<Identifier, std::unique_ptr<Resource>> mResources;
+  LogSystem* mLog;
 };
 
 #include "ResourceCache.inl"
 
-//} // end namespace core
+} // end namespace core
 
 #endif

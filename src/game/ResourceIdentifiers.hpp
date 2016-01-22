@@ -26,10 +26,14 @@ enum class Music : unsigned short
   GAME_THEME,
 };
 
+namespace core
+{
 template <typename Resource, typename Identifier>
 class ResourceCache;
+}
 
-typedef ResourceCache<sf::Texture, Textures> TextureCache;
-typedef ResourceCache<sf::Font, Fonts> FontCache;
+// define all your needed caches here
+typedef core::ResourceCache<sf::Texture, Textures> TextureCache;
+typedef core::ResourceCache<sf::Font, Fonts> FontCache;
 
 #endif

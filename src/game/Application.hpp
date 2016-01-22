@@ -3,8 +3,8 @@
 
 #include "Blackboard.hpp"
 #include <engine/FpsDisplay.hpp>
-#include <engine/Context.hpp>
 #include <engine/StateStack.hpp>
+#include <engine/Context.hpp>
 #include <engine/ResourceCache.hpp>
 #include <engine/Utility.hpp>
 #include <engine/LogSystem.hpp>
@@ -22,13 +22,14 @@ private:
   void              handleInput();
   void              update();
   void              render();
+  bool              filterEvent( sf::Event::EventType eventType );
 
   sf::RenderWindow  mWindow;
+  core::LogSystem         mLog;
   std::unique_ptr<core::FpsDisplay> mFpsDisplay;
   TextureCache      mTextures;
   FontCache         mFonts;
   Blackboard        mBBoard;
-  core::LogSystem         mLog;
   core::Context           mContext;
   core::StateStack        mStack;
   sf::Time          mTimeStep;  
