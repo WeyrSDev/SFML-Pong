@@ -1,5 +1,5 @@
-#ifndef STATE_HPP
-#define STATE_HPP
+#ifndef CORE_STATE_HPP
+#define CORE_STATE_HPP
 
 #include <states/StateIdentifiers.hpp>
 #include <SFML/Window/Event.hpp>

@@ -1,5 +1,5 @@
-#ifndef FPSDISPLAY_HPP
-#define FPSDISPLAY_HPP
+#ifndef CORE_FPSDISPLAY_HPP
+#define CORE_FPSDISPLAY_HPP
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>

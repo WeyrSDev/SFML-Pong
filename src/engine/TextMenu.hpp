@@ -1,5 +1,5 @@
-#ifndef TEXTMENU_HPP
-#define TEXTMENU_HPP
+#ifndef CORE_TEXTMENU_HPP
+#define CORE_TEXTMENU_HPP
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>

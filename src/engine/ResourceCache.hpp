@@ -1,10 +1,13 @@
-#ifndef RESOURCE_CACHE_HPP
-#define RESOURCE_CACHE_HPP
+#ifndef RESOURCECACHE_HPP
+#define RESOURCECACHE_HPP
 
 #include <map>
 #include <memory>
 #include <stdexcept>
 #include <cassert>
+
+//namespace core
+//{
 
 template <typename Resource, typename Identifier>
 class ResourceCache
@@ -22,5 +25,7 @@ private:
 };
 
 #include "ResourceCache.inl"
+
+//} // end namespace core
 
 #endif

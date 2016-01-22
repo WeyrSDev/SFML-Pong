@@ -1,5 +1,5 @@
-#ifndef STATESTACK_HPP
-#define STATESTACK_HPP
+#ifndef CORE_STATESTACK_HPP
+#define CORE_STATESTACK_HPP
 
 #include "Context.hpp"
 #include "State.hpp"
@@ -10,9 +10,6 @@
 #include <map>
 #include <functional>
 #include <utility>
-#ifdef _DEBUG
-#include <iostream>
-#endif
 
 namespace core
 {
@@ -73,10 +70,6 @@ void StateStack::registerState( States id )
 {
   mFactories[ id ] = [ this, id ]() {
     return std::make_unique<T>( *this, id );
-    //#ifdef _DEBUG
-    //    std::cout << "Registering state " << std::to_string( core::to_integral( id ) ) << std::endl;
-    //#endif
-    mContext->log->write( "Registering state " + std::to_string( core::to_integral( id ) ), core::LogType::DEBUG );
   };
 }
 
