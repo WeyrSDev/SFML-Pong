@@ -3,6 +3,7 @@
 #include <engine/LogSystem.hpp>
 #include <engine/Context.hpp>
 #include <game/Blackboard.hpp>
+#include <game/ResourceIdentifiers.hpp>
 #include <engine/ResourceCache.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Graphics/Sprite.hpp>

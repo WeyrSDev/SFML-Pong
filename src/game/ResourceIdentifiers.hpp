@@ -1,17 +1,15 @@
 #ifndef RESOURCE_IDENTIFIERS_HPP
 #define RESOURCE_IDENTIFIERS_HPP
 
-namespace sf
-{
-  class Texture;
-  class Font;
-}
-
+// add your texture identifiers here
+// do not change the name or underlying type
 enum class Textures : unsigned short
 {
   TITLE_BG = 0u,
 };
 
+// add your font identifiers here
+// do not change the name or underlying type
 enum class Fonts : unsigned short
 {
   MONOSPACE = 0u,
@@ -20,20 +18,19 @@ enum class Fonts : unsigned short
   DP_COMIC,
 };
 
+// add your music identifiers here
+// do not change the name or underlying type
 enum class Music : unsigned short
 {
   MENU_THEME = 0u,
   GAME_THEME,
 };
 
-namespace core
+// add your music identifiers here
+// do not change the name or underlying type
+enum class Sounds : unsigned short
 {
-template <typename Resource, typename Identifier>
-class ResourceCache;
-}
 
-// define all your needed caches here
-typedef core::ResourceCache<sf::Texture, Textures> TextureCache;
-typedef core::ResourceCache<sf::Font, Fonts> FontCache;
+};
 
 #endif

@@ -1,6 +1,7 @@
 #include "TitleState.hpp"
 #include <engine/Context.hpp>
 #include <game/Blackboard.hpp>
+#include <game/ResourceIdentifiers.hpp>
 #include <engine/ResourceCache.hpp>
 #include <engine/Utility.hpp>
 #include <engine/LogSystem.hpp>
@@ -31,16 +32,14 @@ TitleState::TitleState( core::StateStack& stack, States id )
     ( getContext()->textures->get( Textures::TITLE_BG ) );
   mDrawObjects.push_back( std::move( bgSprite ) );
     
-  auto title = std::make_unique<sf::Text>
-    ( "P O N G", font, 100u );
+  auto title = std::make_unique<sf::Text>( "P O N G", font, 100u );
   title->setColor( sf::Color::Green );
   core::centerOrigin( *title );
   title->setPosition( winSize.x / 2.f, 100.f );
   mDrawObjects.push_back( std::move( title ) );
   
-  auto nameText = std::make_unique<sf::Text>
-    ( "created by Sebastian 'SeriousITGuy' Brack",
-      getContext()->fonts->get( Fonts::DP_COMIC ), 24u );
+  auto nameText = std::make_unique<sf::Text>( "created by Sebastian 'SeriousITGuy' Brack",
+                                              getContext()->fonts->get( Fonts::DP_COMIC ), 24u );
   core::centerOrigin( *nameText );
   nameText->setPosition( winSize.x / 2.f, winSize.y - 30.f );
   mDrawObjects.push_back( std::move( nameText ) );
@@ -51,7 +50,6 @@ TitleState::TitleState( core::StateStack& stack, States id )
 bool TitleState::handleInput( const sf::Event& event )
 {
   if( event.type == getContext()->blackboard->keyEventType ) {
-    //getContext()->log->write( "TitleState::handleInput - event received", core::LogType::DEBUG );
     requestStackPop();
     requestStackPush( States::MENU );
   }

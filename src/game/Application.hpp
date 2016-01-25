@@ -27,8 +27,8 @@ private:
   sf::RenderWindow  mWindow;
   core::LogSystem         mLog;
   std::unique_ptr<core::FpsDisplay> mFpsDisplay;
-  TextureCache      mTextures;
-  FontCache         mFonts;
+  core::TextureCache      mTextures;
+  core::FontCache         mFonts;
   Blackboard        mBBoard;
   core::Context           mContext;
   core::StateStack        mStack;

@@ -6,6 +6,8 @@
 namespace core
 {
 
+///////////////////////////////////////////////////////////////////////////////
+
 State::State( StateStack& stack, States id )
   : mStack( &stack )
   , mId( id )
@@ -15,8 +17,6 @@ State::State( StateStack& stack, States id )
 
 void State::requestStackPush( States id )
 {
-  //*getContext()->log << core::Logger::Type::DEBUG
-  //  << "Requested stack push for state " << mStack->getStateName( id ) << "\n";
   getContext()->log->write( "Requested stack push for state " + mStack->getStateName( id ),
                           LogType::DEBUG );
   mStack->pushState( id );
@@ -46,5 +46,7 @@ Context* State::getContext() const
 {
   return mStack->getContext();
 }
+
+///////////////////////////////////////////////////////////////////////////////
 
 } // end namespace core

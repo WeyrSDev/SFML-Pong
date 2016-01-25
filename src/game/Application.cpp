@@ -1,4 +1,5 @@
-#include <game/Application.hpp>
+#include "Application.hpp"
+#include "ResourceIdentifiers.hpp"
 #include <states/TitleState.hpp>
 #include <states/GameState.hpp>
 #include <states/MenuState.hpp>
@@ -12,7 +13,7 @@
 
 Application::Application()
   : mWindow( { 1000, 600 }, "Pong for #1GAM", sf::Style::Close )
-  , mLog( "pong.log", core::LogType::DEBUG )
+  , mLog( "pong.log", core::LogType::INFO )
   , mFpsDisplay( nullptr )
   , mTextures( &mLog )
   , mFonts( &mLog )
@@ -45,8 +46,8 @@ Application::Application()
   mStack.registerState<GameoverState>( States::GAMEOVER );
   mStack.registerState<CreditState>( States::CREDITS );
 
-  mLog.write( "Application initialized successfully", core::LogType::INFO );
   mLog.write( "Starting StateStack", core::LogType::INFO );
+  mLog.write( "Application initialized successfully", core::LogType::INFO );  
   mStack.pushState( States::TITLE );
 }
 
