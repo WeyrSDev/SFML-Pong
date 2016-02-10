@@ -6,15 +6,14 @@
 #include <engine/Utility.hpp>
 #include <engine/LogSystem.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <iostream>
+#include <cmath>
 
 ///////////////////////////////////////////////////////////////////////////////
 
 TitleState::TitleState( core::StateStack& stack, States id )
   : State( stack, id )
   , mStartText()
-  , mShowText( true )
-  , mTextEffectTime( sf::seconds( 0.66f ) )
+  , mTextEffectTime( 0.66f )
   , mFrameTime( sf::Time::Zero )
   , mDrawObjects()
 {
@@ -61,11 +60,14 @@ bool TitleState::handleInput( const sf::Event& event )
 
 bool TitleState::update( const sf::Time dt )
 {
+  // smooth blink effect using sine-wave and 1-sec period mofified by a
+  // custom effect time
+  // only changes alpha value of current text color
   mFrameTime += dt;
-  if( mFrameTime > mTextEffectTime ) {
-    mShowText = !mShowText;
-    mFrameTime = sf::Time::Zero;
-  }
+  auto sine = std::abs( std::sin( mFrameTime.asSeconds() * core::PI * mTextEffectTime ) * 255 );
+  sf::Color color = mStartText.getColor();
+  color.a = static_cast<unsigned int>( sine );
+  mStartText.setColor( color );
 
   return true;
 }
@@ -78,9 +80,7 @@ void TitleState::render()
   for( const auto& drawObject : mDrawObjects ) {
     window.draw( *drawObject );
   }  
-  if( mShowText ) {
-    window.draw( mStartText );
-  }
+  window.draw( mStartText );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

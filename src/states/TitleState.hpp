@@ -18,8 +18,7 @@ public:
 
 private:
   sf::Text     mStartText;
-  bool         mShowText;
-  sf::Time     mTextEffectTime;
+  float        mTextEffectTime;
   sf::Time     mFrameTime;
   std::vector<std::unique_ptr<sf::Drawable>> mDrawObjects;
 };

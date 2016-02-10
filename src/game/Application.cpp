@@ -12,8 +12,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 Application::Application()
-  : mWindow( { 1000, 600 }, "Pong for #1GAM", sf::Style::Close )
-  , mLog( "pong.log", core::LogType::INFO )
+  : mWindow( { 1000, 600 }, "Pong", sf::Style::Close )
+#ifdef _DEBUG
+  , mLog( "pong.log", core::LogType::DEBUG ) // for debug builds
+#else
+  , mLog( "pong.log", core::LogType::INFO ) // for release builds
+#endif  
   , mFpsDisplay( nullptr )
   , mTextures( &mLog )
   , mFonts( &mLog )
@@ -88,6 +92,10 @@ void Application::handleInput()
     if( filterEvent( event.type ) ) {
       mLog.write( "Application::handleInput() event " + core::eventToString( event.type )
                   + " registered", core::LogType::DEBUG );
+    }
+    if( event.type == mBBoard.keyEventType
+        && event.key.code == sf::Keyboard::F12 ) {
+      core::makeScreenshot( mWindow );
     }
     mStack.handleInput( event );
 

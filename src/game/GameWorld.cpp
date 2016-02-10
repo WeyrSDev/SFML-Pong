@@ -36,6 +36,7 @@ GameWorld::GameWorld( const core::Context& context )
   , mSingleFrameMode( false )
   , mShowDebugInfo( true )
   , mDebugInfo()
+  , mDebugTimer( sf::Time::Zero )
 #endif
 {
   mWinSize = { static_cast<float>( context.window->getSize().x ),
@@ -62,7 +63,7 @@ GameWorld::GameWorld( const core::Context& context )
 #ifdef _DEBUG
   mDebugInfo.setFont( mContext.fonts->get( Fonts::MONOSPACE ) );
   mDebugInfo.setCharacterSize( 10u );
-  setDebugInfo();
+  //setDebugInfo( dt );
   mDebugInfo.setPosition( 15.f, mWinSize.y - 15.f );
 #endif
   
@@ -89,6 +90,11 @@ void GameWorld::handleInput( const sf::Event& event )
     if( event.key.code == sf::Keyboard::F4 ) {
       mSingleFrameStep = true; // advance a single frame in single frame mode
     }
+    if( event.key.code == sf::Keyboard::F5 ) {
+      // insta win game to move to gameover screen
+      mContext.blackboard->playerWon = true;
+      mContext.blackboard->gameOver = true;
+    }
 #endif
   }
 }
@@ -112,7 +118,7 @@ void GameWorld::update( const sf::Time dt )
 #ifdef _DEBUG
   // if debug info is to be shown, update it before hand
   if( mShowDebugInfo ) {
-    setDebugInfo();
+    setDebugInfo( dt );
   }
   // if we are in single frame mode and no single frame step has been requested
   // just abort update completly, so nothing happens
@@ -321,16 +327,22 @@ void GameWorld::resetGameBall()
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifdef _DEBUG
-void GameWorld::setDebugInfo()
+void GameWorld::setDebugInfo( sf::Time dt )
 {
-  mDebugInfo.setString( "game ball x: " + std::to_string( mGameBall.getPosition().x )
-                        + " y: " + std::to_string( mGameBall.getPosition().y ) + "\n"
-                        + "ball speed: " + std::to_string( mBallSpeed )
-                        + " ball angle: " + std::to_string( mBallAngle ) + "\n"
-                        + "game time: " + std::to_string( mGameTime.asSeconds() )
-                        );
+  mDebugTimer += dt;
 
-  mDebugInfo.setOrigin( 0.f, mDebugInfo.getLocalBounds().height );
+  if( mDebugTimer > sf::seconds( 0.1f ) ) {
+    mDebugInfo.setString( "game ball x: " + std::to_string( mGameBall.getPosition().x )
+                          + " y: " + std::to_string( mGameBall.getPosition().y ) + "\n"
+                          + "ball speed: " + std::to_string( mBallSpeed )
+                          + " ball angle: " + std::to_string( mBallAngle ) + "\n"
+                          + "game time: " + std::to_string( mGameTime.asSeconds() )
+                          );
+
+    mDebugInfo.setOrigin( 0.f, mDebugInfo.getLocalBounds().height );
+
+    mDebugTimer = sf::Time::Zero;
+  }
 }
 #endif
 

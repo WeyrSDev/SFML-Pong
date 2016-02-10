@@ -22,7 +22,7 @@ private:
   void setScoreString();
   void resetGameBall();
 #ifdef _DEBUG
-  void setDebugInfo();
+  void setDebugInfo( sf::Time dt );
 #endif
 
   core::Context mContext;
@@ -51,6 +51,7 @@ private:
   bool mToggleBallMove;
   bool mShowDebugInfo;
   sf::Text mDebugInfo;
+  sf::Time mDebugTimer;
 #endif
 };
 

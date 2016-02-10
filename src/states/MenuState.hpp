@@ -3,8 +3,6 @@
 
 #include <engine/State.hpp>
 #include <engine/TextMenu.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/Sprite.hpp>
 #include <vector>
 #include <memory>
 

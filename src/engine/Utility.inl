@@ -18,3 +18,19 @@ constexpr auto to_integral( T t ) -> typename std::underlying_type<T>::type
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+
+template<typename T>
+sf::Vector2<T> getPosition( sf::Rect<T> rectangle )
+{
+  return sf::Vector2<T>( rectangle.left, rectangle.top );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+template<typename T>
+sf::Vector2<T> getSize( sf::Rect<T> rectangle )
+{
+  return sf::Vector2<T>( rectangle.width, rectangle.height );
+}
+
+///////////////////////////////////////////////////////////////////////////////

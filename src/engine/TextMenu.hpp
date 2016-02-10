@@ -74,8 +74,7 @@ public:
 
 private:
   // override of sf::Drawable::draw()
-  virtual void draw( sf::RenderTarget& target, sf::RenderStates states )
-    const override;
+  virtual void draw( sf::RenderTarget& target, sf::RenderStates states ) const override;
 
   // forward declaration of private class
   class Impl;

@@ -1,11 +1,14 @@
 #include "Utility.hpp"
+#include <SFML/Graphics/Texture.hpp>
 #include <ctime>
 #include <random>
 #include <cassert>
+#include <thread>
 
 namespace core
 {
 ///////////////////////////////////////////////////////////////////////////////
+
 namespace // anonymous namespace to hide its contents outside this TU
 {
 std::mt19937 createRandomEngine()
@@ -16,7 +19,6 @@ std::mt19937 createRandomEngine()
 
 auto RandomEngine = createRandomEngine();
 
-const float PI = 4.f * std::atan( 1.f );
 } // end anonymous namespace
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -113,6 +115,24 @@ std::string eventToString( sf::Event::EventType type )
     EVENTTOSTRING_CASE( SensorChanged )
   }
   return std::string { "UNKNOWN" };
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+void makeScreenshot( const sf::RenderWindow & window )
+{
+  // create a texture with the size of the current window
+  auto size = window.getSize();
+  sf::Texture screenshot;
+  screenshot.create( size.x, size.y );
+
+  // create the screenshot from the current screenbuffer
+  screenshot.update( window );
+  sf::Image img = screenshot.copyToImage();
+
+  // save it to file in another thread for no performance hit in main thread
+  std::thread t( [ img ]() { img.saveToFile( "screenshot.png" ); } );
+  t.detach();
 }
 
 ///////////////////////////////////////////////////////////////////////////////
