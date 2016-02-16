@@ -1,7 +1,6 @@
 #ifndef CORE_RESOURCECACHE_HPP
 #define CORE_RESOURCECACHE_HPP
 
-//#include "LogSystem.hpp"
 #include <map>
 #include <memory>
 #include <stdexcept>
@@ -20,7 +19,7 @@ public:
   {
     if( mLog != nullptr ) {
       mLog->write( "Starting Resource Cache for " + std::string( typeid( Resource ).name() ),
-                   LogType::INFO );
+                   LogType::DEBUG );
     }
   }
 

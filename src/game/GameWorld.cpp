@@ -6,16 +6,19 @@
 #include <engine/ResourceCache.hpp>
 #include <engine/LogSystem.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#ifdef _DEBUG
 #include <iostream>
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////
 
 GameWorld::GameWorld( const core::Context& context )
   : mContext( context )
   , mWinSize()
-  , mPlayer( { 20.f, 100.f } )
-  , mEnemy( { 20.f, 100.f } )
-  , mGameBall( 10.f )
+  , mPlayer( Paddle::Type::Player, context )
+  , mEnemy( Paddle::Type::Computer, context )
+  //, mGameBall( 10.f )
+  , mGameBall( context )
   , mMoveUp( false )
   , mMoveDown( false )
   , mPlayerSpeed( 200.f )
@@ -31,7 +34,7 @@ GameWorld::GameWorld( const core::Context& context )
   , mGameTime( sf::Time::Zero )
   , mWinScore( 2u )  
 #ifdef _DEBUG
-  , mToggleBallMove( false )
+  , mStopBallMove( false )
   , mSingleFrameStep( false )
   , mSingleFrameMode( false )
   , mShowDebugInfo( true )
@@ -41,16 +44,19 @@ GameWorld::GameWorld( const core::Context& context )
 {
   mWinSize = { static_cast<float>( context.window->getSize().x ),
                static_cast<float>( context.window->getSize().y ) };
-  mPlayer.setFillColor( sf::Color::Green );
-  mPlayer.setOrigin( mPlayer.getSize() / 2.f );
+  mPlayer.setColor( sf::Color::Green );  
+  core::centerOrigin( mPlayer );
   mPlayer.setPosition( mPlayer.getOrigin().x + 10.f, mWinSize.y / 2.f );
-
-  mEnemy.setFillColor( sf::Color::Green );
-  mEnemy.setOrigin( mEnemy.getSize() / 2.f );
+  mPlayer.setScale( sf::Vector2f { 1.5f, 1.5f } );
+  
+  mEnemy.setColor( sf::Color::Green );
+  core::centerOrigin( mEnemy );
   mEnemy.setPosition( mWinSize.x - mEnemy.getOrigin().x -10.f, mWinSize.y / 2.f );
+  mEnemy.setScale( sf::Vector2f { 1.5f, 1.5f } );
 
-  mGameBall.setFillColor( sf::Color::Green );
-  mGameBall.setOrigin( mGameBall.getRadius(), mGameBall.getRadius() );
+  mGameBall.setColor( sf::Color::Green );
+  core::centerOrigin( mGameBall );
+  mGameBall.setScale( sf::Vector2f { 1.5f, 1.5f } );
   resetGameBall();
 
   mScoreText.setFont( mContext.fonts->get( Fonts::C64_Pixel ) );
@@ -65,6 +71,11 @@ GameWorld::GameWorld( const core::Context& context )
   mDebugInfo.setCharacterSize( 10u );
   //setDebugInfo( dt );
   mDebugInfo.setPosition( 15.f, mWinSize.y - 15.f );
+  //std::cout << core::dumpToString( mPlayer ) << std::endl;
+  mContext.log->write( "Debug dump of player variables\n" + core::dumpToString( mPlayer ),
+                       core::LogType::DEBUG );
+  mContext.log->write( "Debug dump of enemy variables\n" + core::dumpToString( mEnemy ),
+                       core::LogType::DEBUG );
 #endif
   
   mContext.log->write( "GameWorld initialized successfully", core::LogType::DEBUG );
@@ -74,26 +85,38 @@ GameWorld::GameWorld( const core::Context& context )
 
 void GameWorld::handleInput( const sf::Event& event )
 {
-  mContext.log->write( "GameWorld::handleInput() - Event received", core::LogType::DEBUG );
-
   if( event.type == mContext.blackboard->keyEventType ) {
 #ifdef _DEBUG
     if( event.key.code == sf::Keyboard::F1 ) {
       mShowDebugInfo = !mShowDebugInfo; // toggle debug info on/off
+      mContext.log->write( "Show debug info set to " + std::to_string( mShowDebugInfo ),
+                           core::LogType::DEBUG );
     }
     if( event.key.code == sf::Keyboard::F2 ) {
-      mToggleBallMove = !mToggleBallMove; // toggle ball movement
+      mStopBallMove = !mStopBallMove; // toggle ball movement
+      mContext.log->write( "Stop ball set to " + std::to_string( mStopBallMove ),
+                           core::LogType::DEBUG );
     }    
     if( event.key.code == sf::Keyboard::F3 ) {
       mSingleFrameMode = !mSingleFrameMode; // toggle single frame mode on/off
+      mContext.log->write( "Single frame mode set to " + std::to_string( mSingleFrameMode ),
+                           core::LogType::DEBUG );
     }
     if( event.key.code == sf::Keyboard::F4 ) {
       mSingleFrameStep = true; // advance a single frame in single frame mode
+      mContext.log->write( "Single frame mode next step", core::LogType::DEBUG );
     }
     if( event.key.code == sf::Keyboard::F5 ) {
       // insta win game to move to gameover screen
       mContext.blackboard->playerWon = true;
       mContext.blackboard->gameOver = true;
+      mContext.log->write( "Insta win triggered by user", core::LogType::DEBUG );
+    }
+    if( event.key.code == sf::Keyboard::F6 ) {
+      // insta loose to move to gameover screen
+      mContext.blackboard->playerWon = false;
+      mContext.blackboard->gameOver = true;
+      mContext.log->write( "Insta loss triggered by user", core::LogType::DEBUG );
     }
 #endif
   }
@@ -128,7 +151,7 @@ void GameWorld::update( const sf::Time dt )
   }
   mSingleFrameStep = false;
 
-  if( mToggleBallMove ) {
+  if( mStopBallMove ) {
     if( mBallSpeed != 0.f ) {
       mOldBallSpeed = mBallSpeed;
       mBallSpeed = 0.f;
@@ -149,7 +172,8 @@ void GameWorld::update( const sf::Time dt )
   auto vector = core::toVector( core::degToRad( static_cast<float>( mBallAngle ) ) );
   auto ballMove = vector * mBallSpeed * dt.asSeconds();
   auto ballGBounds = mGameBall.getGlobalBounds();
-  auto playerGBounds = mPlayer.getGlobalBounds();
+  const auto playerGBounds = mPlayer.getGlobalBounds();
+  const auto ballRadius = mGameBall.getGlobalBounds().width / 2.f;
 
   // if ball would move out of window correct the movement to just hit the wall
   // not only the y-value but also the x-value of the collision step must be corrected
@@ -179,10 +203,11 @@ void GameWorld::update( const sf::Time dt )
   // touch the paddle and reflect ball a y-axis
   // formula for y-axis reflection is newAngle = 360 + ( 180 - oldAngle )
   // speed ball up by acceleration after every paddle collision
+  // TODO: detect where the paddle is hit for correct physical reflection
   else if( ballGBounds.intersects( mPlayer.getGlobalBounds() )
            && mBallAngle > 90 && mBallAngle < 270 ) {
     auto newBallX = playerGBounds.left + playerGBounds.width
-                    + mGameBall.getRadius();
+                    + ballRadius;
     mGameBall.setPosition( newBallX, mGameBall.getPosition().y );
     mBallSpeed += mBallAcceleration;
     // adding a friction to the ball based on paddle movement
@@ -198,7 +223,7 @@ void GameWorld::update( const sf::Time dt )
       mBallAngle = 360 + ( 180 - mBallAngle );
     }
   } else if( ballGBounds.intersects( mEnemy.getGlobalBounds() ) ) {
-    auto newBallX = mEnemy.getGlobalBounds().left - mGameBall.getRadius();
+    auto newBallX = mEnemy.getGlobalBounds().left - ballRadius;
     mGameBall.setPosition( newBallX, mGameBall.getPosition().y );
     mBallAngle = 360 + ( 180 - mBallAngle );
     mBallSpeed += mBallAcceleration;
@@ -212,17 +237,20 @@ void GameWorld::update( const sf::Time dt )
   // move player paddle
   // pre calculate the target of movement before actual movement
   // to make correct collision detection with top and bottom of window
-  auto playerMove = mPlayerSpeed * dt.asSeconds();
+  auto playerMove = mPlayerSpeed * dt.asSeconds(); // always positive value
   if( mMoveUp ) {
-    if( playerGBounds.top - playerMove <= 0.f ) {
+    playerMove = -playerMove; // negate to simulate upper movement
+    //mContext.log->write( "playerMove=" + std::to_string( playerMove ), core::LogType::DEBUG );
+    if( playerGBounds.top + playerMove <= 0.f ) {
       mPlayer.move( 0.f, -playerGBounds.top );
       mMoveUp = false;
     } else {
-      mPlayer.move( 0.f, -playerMove );
+      mPlayer.move( 0.f, playerMove );
       mMoveUp = false;
     }
   }
   if( mMoveDown ) {
+    //mContext.log->write( "playerMove=" + std::to_string( playerMove ), core::LogType::DEBUG );
     if( playerGBounds.top + playerGBounds.height >= mWinSize.y ) {
       auto curYDistance = mWinSize.y - ( playerGBounds.top
                                          + playerGBounds.height );
@@ -258,11 +286,11 @@ void GameWorld::update( const sf::Time dt )
   }
 
   // check for scoring
-  if( mGameBall.getPosition().x + mGameBall.getRadius() < 0.f ) {
+  if( mGameBall.getPosition().x + ballRadius < 0.f ) {
     mEnemyScore += 1;
     setScoreString();
     resetGameBall();
-  } else if( mGameBall.getPosition().x - mGameBall.getRadius() > mWinSize.x ) {
+  } else if( mGameBall.getPosition().x - ballRadius > mWinSize.x ) {
     mPlayerScore += 1;
     setScoreString();
     resetGameBall();
@@ -332,13 +360,16 @@ void GameWorld::setDebugInfo( sf::Time dt )
   mDebugTimer += dt;
 
   if( mDebugTimer > sf::seconds( 0.1f ) ) {
-    mDebugInfo.setString( "game ball x: " + std::to_string( mGameBall.getPosition().x )
+    mDebugInfo.setString( "player paddle x: " + std::to_string(mPlayer.getPosition().x )
+                          + " y: " + std::to_string(mPlayer.getPosition().y) + "\n"
+                          + "game ball x: " + std::to_string( mGameBall.getPosition().x )
                           + " y: " + std::to_string( mGameBall.getPosition().y ) + "\n"
                           + "ball speed: " + std::to_string( mBallSpeed )
                           + " ball angle: " + std::to_string( mBallAngle ) + "\n"
                           + "game time: " + std::to_string( mGameTime.asSeconds() )
                           );
 
+    // set origin to lower left corner
     mDebugInfo.setOrigin( 0.f, mDebugInfo.getLocalBounds().height );
 
     mDebugTimer = sf::Time::Zero;

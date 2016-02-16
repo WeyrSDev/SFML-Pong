@@ -62,6 +62,7 @@ sf::Vector2f normalizeVector( const sf::Vector2f vector )
 
 sf::Vector2f toVector( const float angle )
 {
+  // TODO: Remove unnecessary temporary
   sf::Vector2f vector = { std::cos( angle ), std::sin( angle ) };
   return vector;
 }
@@ -70,6 +71,7 @@ sf::Vector2f toVector( const float angle )
 
 int normalizeAngle( int angle )
 {
+  // TODO: Remove unnecessary temporary
   auto temp = angle;
   while( temp > 360 ) {
     temp -= 360;
@@ -119,20 +121,39 @@ std::string eventToString( sf::Event::EventType type )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void makeScreenshot( const sf::RenderWindow & window )
+void makeScreenshot( const sf::RenderWindow& window )
 {
   // create a texture with the size of the current window
-  auto size = window.getSize();
+  const auto size = window.getSize();
   sf::Texture screenshot;
   screenshot.create( size.x, size.y );
 
-  // create the screenshot from the current screenbuffer
+  // create the screenshot from the current screen buffer
   screenshot.update( window );
   sf::Image img = screenshot.copyToImage();
 
   // save it to file in another thread for no performance hit in main thread
   std::thread t( [ img ]() { img.saveToFile( "screenshot.png" ); } );
   t.detach();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+std::string dumpToString( const sf::Sprite& sprite )
+{
+  const auto position = sprite.getPosition();
+  const auto origin = sprite.getOrigin();
+  const auto lBounds = sprite.getLocalBounds();
+  const auto gBounds = sprite.getGlobalBounds();
+
+  std::string spriteString = "\tpos.x=" + std::to_string( position.x ) + " " +
+    "\tpos.y=" + std::to_string( position.y ) + "\n" + 
+    "\torg.x=" + std::to_string( origin.x ) + " " +
+    "\torg.y=" + std::to_string( origin.y ) + "\n" +
+    "\tlBounds:" + to_string( lBounds ) + "\n" +
+    "\tgBounds:" + to_string( gBounds );
+
+  return spriteString;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

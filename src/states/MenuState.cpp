@@ -13,7 +13,7 @@
 
 MenuState::MenuState( core::StateStack& stack, States id )
   : State( stack, id )
-  , mMenu( getContext()->fonts->get( Fonts::SDS_8BIT ), 30u, 15u,
+  , mMenu( getContext()->fonts->get( Fonts::C64_Pixel ), 30u, 15u,
            getContext()->blackboard->keyEventType )
   , mDrawObjects()
 {
@@ -44,16 +44,6 @@ MenuState::MenuState( core::StateStack& stack, States id )
   mMenu.add( "EXIT" );
   core::centerOrigin( mMenu );
   mMenu.setPosition( winSize / 2.f );
-
-  // simple implementation of drawing AABB for menu
-  //auto menuBackdrop = std::make_unique<sf::RectangleShape>
-  //  ( core::getSize( mMenu.getLocalBounds() ) + sf::Vector2f( 1.f, 1.f ) );
-  //core::centerOrigin( *menuBackdrop );
-  //menuBackdrop->setFillColor( sf::Color::Transparent );
-  //menuBackdrop->setOutlineColor( sf::Color::Green );
-  //menuBackdrop->setOutlineThickness( 2.f );
-  //menuBackdrop->setPosition( winSize / 2.f );
-  //mDrawObjects.push_back( std::move( menuBackdrop ) );
 }
 
 ///////////////////////////////////////////////////////////////////////////////

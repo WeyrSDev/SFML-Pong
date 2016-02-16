@@ -1,6 +1,8 @@
 #ifndef GAMEWORLD_HPP
 #define GAMEWORLD_HPP
 
+#include "Paddle.hpp"
+#include "GameBall.hpp"
 #include <engine/Context.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/System/Time.hpp>
@@ -27,9 +29,10 @@ private:
 
   core::Context mContext;
   sf::Vector2f mWinSize;
-  sf::RectangleShape mPlayer;
-  sf::RectangleShape mEnemy;
-  sf::CircleShape mGameBall;
+  Paddle mPlayer;
+  Paddle mEnemy;
+  //sf::CircleShape mGameBall;
+  GameBall mGameBall;
   bool mMoveUp;
   bool mMoveDown;
   float mPlayerSpeed;
@@ -48,7 +51,7 @@ private:
 #ifdef _DEBUG
   bool mSingleFrameStep;
   bool mSingleFrameMode;
-  bool mToggleBallMove;
+  bool mStopBallMove;
   bool mShowDebugInfo;
   sf::Text mDebugInfo;
   sf::Time mDebugTimer;

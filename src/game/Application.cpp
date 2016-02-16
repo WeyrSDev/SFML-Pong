@@ -11,6 +11,15 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+const int BUILD_NUM = 12;
+#ifdef _DEBUG
+const std::string BUILD_TYPE = "DEBUG";
+#else
+const std::string BUILD_TYPE = "RELEASE";
+#endif
+
+///////////////////////////////////////////////////////////////////////////////
+
 Application::Application()
   : mWindow( { 1000, 600 }, "Pong", sf::Style::Close )
 #ifdef _DEBUG
@@ -26,15 +35,20 @@ Application::Application()
   , mStack( mContext )
   , mTimeStep( sf::seconds( 1.f / 60.f ) )  
 {
+  mLog.write( "Starting PONG client build " + std::to_string( BUILD_NUM ) + " " + BUILD_TYPE,
+              core::LogType::INFO );
+
   mWindow.setKeyRepeatEnabled( false );
   mWindow.setFramerateLimit( 200u );
   mWindow.setMouseCursorVisible( false );
 
   mTextures.load( Textures::TITLE_BG, "../data/gfx/title-bg.png" );
+  mTextures.load( Textures::TILES, "../data/gfx/tiles.png" );
   mFonts.load( Fonts::SDS_8BIT, "../data/fonts/SDS_8BIT.ttf" );
   mFonts.load( Fonts::C64_Pixel, "../data/fonts/C64-Pixel.ttf" );
   mFonts.load( Fonts::MONOSPACE, "../data/fonts/DejaVuSansMono.ttf" );
   mFonts.load( Fonts::DP_COMIC, "../data/fonts/dpcomic.ttf" );
+  mFonts.load( Fonts::X7X5_PIXEL, "../data/fonts/7x5_pixel.ttf" );
 
   mBBoard.keyEventType = sf::Event::EventType::KeyReleased;
   mLog.write( "keyEventType set to " + core::eventToString( mBBoard.keyEventType ),
@@ -93,8 +107,7 @@ void Application::handleInput()
       mLog.write( "Application::handleInput() event " + core::eventToString( event.type )
                   + " registered", core::LogType::DEBUG );
     }
-    if( event.type == mBBoard.keyEventType
-        && event.key.code == sf::Keyboard::F12 ) {
+    if( event.type == mBBoard.keyEventType && event.key.code == sf::Keyboard::F12 ) {
       core::makeScreenshot( mWindow );
     }
     mStack.handleInput( event );
