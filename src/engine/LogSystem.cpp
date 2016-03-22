@@ -51,7 +51,7 @@ void LogSystem::write( sf::String msg, LogType logType )
       val = "[FATAL]\t";
       break;
   }
-
+  val += getDayTime( "%H:%M:%S\t" );
   val += msg;
   mLogFile << val << std::endl;
   *mOpStr << val << std::endl;

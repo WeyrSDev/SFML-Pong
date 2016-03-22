@@ -11,7 +11,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-const int BUILD_NUM = 12;
+const int BUILD_NUM = 13;
 #ifdef _DEBUG
 const std::string BUILD_TYPE = "DEBUG";
 #else
@@ -44,11 +44,9 @@ Application::Application()
 
   mTextures.load( Textures::TITLE_BG, "../data/gfx/title-bg.png" );
   mTextures.load( Textures::TILES, "../data/gfx/tiles.png" );
-  mFonts.load( Fonts::SDS_8BIT, "../data/fonts/SDS_8BIT.ttf" );
-  mFonts.load( Fonts::C64_Pixel, "../data/fonts/C64-Pixel.ttf" );
   mFonts.load( Fonts::MONOSPACE, "../data/fonts/DejaVuSansMono.ttf" );
-  mFonts.load( Fonts::DP_COMIC, "../data/fonts/dpcomic.ttf" );
-  mFonts.load( Fonts::X7X5_PIXEL, "../data/fonts/7x5_pixel.ttf" );
+  mFonts.load( Fonts::C64, "../data/fonts/C64-Pixel.ttf" );  
+  mFonts.load( Fonts::COMIC, "../data/fonts/dpcomic.ttf" );
 
   mBBoard.keyEventType = sf::Event::EventType::KeyReleased;
   mLog.write( "keyEventType set to " + core::eventToString( mBBoard.keyEventType ),
@@ -108,7 +106,7 @@ void Application::handleInput()
                   + " registered", core::LogType::DEBUG );
     }
     if( event.type == mBBoard.keyEventType && event.key.code == sf::Keyboard::F12 ) {
-      core::makeScreenshot( mWindow );
+      core::makeScreenshot( mWindow, "pong" );
     }
     mStack.handleInput( event );
 

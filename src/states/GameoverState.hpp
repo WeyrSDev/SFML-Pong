@@ -3,8 +3,8 @@
 
 #include <engine/State.hpp>
 #include <engine/TextMenu.hpp>
-#include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/Sprite.hpp>
+
+#include <memory>
 
 class GameoverState : public core::State
 {
@@ -18,13 +18,12 @@ private:
   enum class MenuOption : unsigned int
   {
     PLAY = 0u,
-    MENU = 1u,
-    EXIT = 2u,
+    MENU,
+    EXIT,
   };
 
-  sf::Sprite mBackgroundSprite;
-  sf::Text mGameoverText;
   core::TextMenu mMenu;
+  std::vector<std::unique_ptr<sf::Drawable>> mDrawObjects;
 };
 
 #endif

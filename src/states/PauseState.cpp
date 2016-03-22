@@ -1,4 +1,5 @@
 #include "PauseState.hpp"
+#include <game/DataTables.hpp>
 #include <engine/Context.hpp>
 #include <game/Blackboard.hpp>
 #include <game/ResourceIdentifiers.hpp>
@@ -8,11 +9,18 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+namespace
+{
+const PauseStateStringData Strings = initPauseStrings();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 PauseState::PauseState( core::StateStack& stack, States id )
   : State( stack, id )
   , mBackgroundShape()
   , mPauseText()
-  , mMenu( getContext()->fonts->get( Fonts::C64_Pixel ), 30u, 15u,
+  , mMenu( getContext()->fonts->get( Fonts::C64 ), 30u, 15u,
            getContext()->blackboard->keyEventType )
 {
   auto winSize = getContext()->window->getView().getSize();
@@ -21,19 +29,20 @@ PauseState::PauseState( core::StateStack& stack, States id )
   mBackgroundShape.setSize( winSize );  
   mBackgroundShape.setFillColor( { 0, 0, 0, 150 } ); 
 
-  const auto& font = getContext()->fonts->get( Fonts::C64_Pixel );
+  const auto& font = getContext()->fonts->get( Fonts::C64 );
 
   mPauseText.setFont( font );
   mPauseText.setCharacterSize( 40u );
-  mPauseText.setString( "GAME PAUSED" );
+  mPauseText.setString( Strings.pause );
   mPauseText.setColor( sf::Color::Green );
   core::centerOrigin( mPauseText );
   mPauseText.setPosition( winSize.x / 2.f, 75.f );
 
   mMenu.setHighlightColor( sf::Color::Green );
-  mMenu.add( "RESUME GAME" );
-  mMenu.add( "EXIT TO MENU" );
-  mMenu.add( "EXIT GAME" );
+  mMenu.add( Strings.resume );
+  mMenu.add( Strings.restart );
+  mMenu.add( Strings.menu );
+  mMenu.add( Strings.exit );
   core::centerOrigin( mMenu );
   mMenu.setPosition( winSize / 2.f );
 }
@@ -42,7 +51,7 @@ PauseState::PauseState( core::StateStack& stack, States id )
 
 bool PauseState::handleInput( const sf::Event& event )
 {
-  if( event.type == sf::Event::KeyPressed ) {
+  if( event.type == getContext()->blackboard->keyEventType ) {
     if( event.key.code == sf::Keyboard::Escape ) {
       requestStackPop();
     }
@@ -52,6 +61,11 @@ bool PauseState::handleInput( const sf::Event& event )
   switch( menuResult ) {
     case core::to_integral(MenuOption::RESUME):
       requestStackPop();
+      break;
+
+    case core::to_integral(MenuOption::RESTART):
+      requestStackClear();
+      requestStackPush( States::GAME );
       break;
 
     case core::to_integral(MenuOption::EXIT_MENU):

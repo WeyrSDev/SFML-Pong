@@ -34,7 +34,6 @@ bool GameState::update( const sf::Time dt )
   mWorld.handleRealtimeInput();
   mWorld.update( dt );
   if( getContext()->blackboard->gameOver ) {
-    requestStackPop();
     requestStackPush( States::GAMEOVER );
   }
 

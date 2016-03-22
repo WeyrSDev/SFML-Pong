@@ -4,6 +4,10 @@
 #include <random>
 #include <cassert>
 #include <thread>
+#include <sstream>
+#include <iomanip>
+#include <chrono>
+#include <ctime>
 
 namespace core
 {
@@ -121,7 +125,7 @@ std::string eventToString( sf::Event::EventType type )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void makeScreenshot( const sf::RenderWindow& window )
+void makeScreenshot( const sf::RenderWindow& window, std::string filePrefix )
 {
   // create a texture with the size of the current window
   const auto size = window.getSize();
@@ -132,28 +136,51 @@ void makeScreenshot( const sf::RenderWindow& window )
   screenshot.update( window );
   sf::Image img = screenshot.copyToImage();
 
+  // set the filename with prefix current date and time
+  // if prefix is empty use generic engine name
+  // Remember to not use : or other forbidden characters in format string
+  // Also note that getDayTime is not thread-safe
+  // and should be used in main thread only
+  if( filePrefix == "" ) {
+    filePrefix = "core";
+  }
+  std::string filename = filePrefix + getDayTime( "-%d%m%y-%H%M%S" ) + ".png";
+
   // save it to file in another thread for no performance hit in main thread
-  std::thread t( [ img ]() { img.saveToFile( "screenshot.png" ); } );
+  std::thread t( [ img,filename ]() { img.saveToFile( filename ); } );
   t.detach();
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::string dumpToString( const sf::Sprite& sprite )
+std::string floatToString( float value, unsigned int digits )
 {
-  const auto position = sprite.getPosition();
-  const auto origin = sprite.getOrigin();
-  const auto lBounds = sprite.getLocalBounds();
-  const auto gBounds = sprite.getGlobalBounds();
+  if( digits > 10u ){
+    digits = 10u;
+  }
 
-  std::string spriteString = "\tpos.x=" + std::to_string( position.x ) + " " +
-    "\tpos.y=" + std::to_string( position.y ) + "\n" + 
-    "\torg.x=" + std::to_string( origin.x ) + " " +
-    "\torg.y=" + std::to_string( origin.y ) + "\n" +
-    "\tlBounds:" + to_string( lBounds ) + "\n" +
-    "\tgBounds:" + to_string( gBounds );
+  std::stringstream sstream;
+  sstream << std::fixed << std::setprecision( digits ) << value;
+  return sstream.str();
+}
 
-  return spriteString;
+///////////////////////////////////////////////////////////////////////////////
+
+std::string getDayTime( char* format )
+{
+  // this function uses plain old C in combination with C++11 std::chrono
+  // TODO: should be replaced with something based on Hinnants C++ Date lib
+  // atm date.h isn't fully supported by VS2015 so fallback to C here ;)
+  auto now = std::chrono::system_clock::now();
+  auto in_time_t = std::chrono::system_clock::to_time_t( now );
+
+  // one can safely ignore VS complaining about std::localtime being deprecated
+  // you can disable this warning in the project settings in VS on file level
+  // it is ISO C++ conformant BUT remember it is NOT thread safe
+  std::stringstream sstream;  
+  sstream << std::put_time( std::localtime( &in_time_t ), format );
+  return sstream.str();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

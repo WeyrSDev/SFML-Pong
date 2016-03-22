@@ -20,7 +20,7 @@ CreditState::CreditState( core::StateStack & stack, States id )
   mDrawObjects.push_back( std::move( bgSprite ) );
 
   auto statusText = std::make_unique<sf::Text>
-    ( "Press ESC to return to menu", getContext()->fonts->get( Fonts::DP_COMIC ), 24u );
+    ( "Press ESC to return to menu", getContext()->fonts->get( Fonts::COMIC ), 24u );
   core::centerOrigin( *statusText );
   statusText->setPosition( winSize.x / 2.f, winSize.y - 30.f );
   mDrawObjects.push_back( std::move( statusText ) );

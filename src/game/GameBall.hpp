@@ -12,15 +12,14 @@ struct Context;
 class GameBall : public core::Entity
 {
 public:
-  explicit GameBall( core::Context context );
-  void setColor( const sf::Color& color ) override;
-  sf::FloatRect getLocalBounds() const override;
-  sf::FloatRect getGlobalBounds() const override;
+  explicit GameBall( core::Context* context );
+  void setColor( const sf::Color& color );
+  virtual sf::FloatRect getLocalBounds() const override;
+  virtual sf::FloatRect getGlobalBounds() const override;
 
 private:
-  virtual void draw( sf::RenderTarget& target, sf::RenderStates states ) const override;
+  virtual void drawCurrent( sf::RenderTarget& target, sf::RenderStates states ) const override;
 
-  const core::Context* mContext;
   sf::Sprite mSprite;
 };
 

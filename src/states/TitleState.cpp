@@ -1,4 +1,5 @@
 #include "TitleState.hpp"
+#include <game/DataTables.hpp>
 #include <engine/Context.hpp>
 #include <game/Blackboard.hpp>
 #include <game/ResourceIdentifiers.hpp>
@@ -10,6 +11,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+namespace
+{
+const TitleStateStringData Strings = initTitleStrings();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 TitleState::TitleState( core::StateStack& stack, States id )
   : State( stack, id )
   , mStartText()
@@ -17,11 +25,11 @@ TitleState::TitleState( core::StateStack& stack, States id )
   , mFrameTime( sf::Time::Zero )
   , mDrawObjects()
 {
-  const auto& font = getContext()->fonts->get( Fonts::C64_Pixel );
+  const auto& font = getContext()->fonts->get( Fonts::C64 );
   auto winSize = getContext()->window->getView().getSize();
 
   mStartText.setFont( font );
-  mStartText.setString( "< Press any key to start >" );
+  mStartText.setString( Strings.start );
   mStartText.setCharacterSize( 24u );
   mStartText.setColor( sf::Color::Green );
   core::centerOrigin( mStartText );
@@ -31,14 +39,14 @@ TitleState::TitleState( core::StateStack& stack, States id )
     ( getContext()->textures->get( Textures::TITLE_BG ) );
   mDrawObjects.push_back( std::move( bgSprite ) );
     
-  auto title = std::make_unique<sf::Text>( "P O N G", font, 100u );
+  auto title = std::make_unique<sf::Text>( Strings.title, font, 96u );
   title->setColor( sf::Color::Green );
   core::centerOrigin( *title );
   title->setPosition( winSize.x / 2.f, 100.f );
   mDrawObjects.push_back( std::move( title ) );
   
-  auto nameText = std::make_unique<sf::Text>( "created by Sebastian 'SeriousITGuy' Brack",
-                                              getContext()->fonts->get( Fonts::DP_COMIC ), 24u );
+  auto nameText = std::make_unique<sf::Text>
+    ( Strings.creator, getContext()->fonts->get( Fonts::COMIC ), 24u );
   core::centerOrigin( *nameText );
   nameText->setPosition( winSize.x / 2.f, winSize.y - 30.f );
   mDrawObjects.push_back( std::move( nameText ) );

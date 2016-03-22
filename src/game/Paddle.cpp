@@ -8,11 +8,13 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-Paddle::Paddle( Type type, core::Context context )
-  : mType( type )
-  , mContext( &context )
-  , mSprite()
-{  
+Paddle::Paddle( Type type, core::Context* context )
+  : core::Entity { context }
+  , mType { type }
+  , mSprite{}
+  , mBaseSpeed( 200.f )
+  , mCurrentSpeed( mBaseSpeed )
+{
   sf::IntRect textureRect { 0,0,0,0 };
   if( mType == Type::Player ) {
     textureRect = sf::IntRect { 0,0,16,80 };
@@ -32,6 +34,27 @@ void Paddle::setColor( const sf::Color & color )
 
 ///////////////////////////////////////////////////////////////////////////////
 
+void Paddle::setSpeed( float speed )
+{
+  mCurrentSpeed = speed;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float Paddle::getSpeed() const
+{
+  return mCurrentSpeed;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+float Paddle::getBaseSpeed() const
+{
+  return mBaseSpeed;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 sf::FloatRect Paddle::getLocalBounds() const
 {
   return mSprite.getLocalBounds();
@@ -46,9 +69,8 @@ sf::FloatRect Paddle::getGlobalBounds() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void Paddle::draw( sf::RenderTarget& target, sf::RenderStates states ) const
+void Paddle::drawCurrent( sf::RenderTarget & target, sf::RenderStates states ) const
 {
-  states.transform *= getTransform();
   target.draw( mSprite, states );
 }
 

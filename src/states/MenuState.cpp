@@ -1,4 +1,5 @@
 #include "MenuState.hpp"
+#include <game/DataTables.hpp>
 #include <engine/Context.hpp>
 #include <game/Blackboard.hpp>
 #include <game/ResourceIdentifiers.hpp>
@@ -11,37 +12,43 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
+namespace
+{
+const MenuStateStringData Strings = initMenuStrings();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
 MenuState::MenuState( core::StateStack& stack, States id )
   : State( stack, id )
-  , mMenu( getContext()->fonts->get( Fonts::C64_Pixel ), 30u, 15u,
+  , mMenu( getContext()->fonts->get( Fonts::C64 ), 32u, 16u,
            getContext()->blackboard->keyEventType )
   , mDrawObjects()
 {
-  const auto& font = getContext()->fonts->get( Fonts::C64_Pixel );
+  const auto& font = getContext()->fonts->get( Fonts::C64 );
   auto winSize = getContext()->window->getView().getSize();
 
   auto bgSprite = std::make_unique<sf::Sprite>
     ( getContext()->textures->get( Textures::TITLE_BG ) );
   mDrawObjects.push_back( std::move( bgSprite ) );
 
-  auto title = std::make_unique<sf::Text>( "P O N G", font, 100u );
+  auto title = std::make_unique<sf::Text>( Strings.title, font, 96u );
   title->setColor( sf::Color::Green );
   core::centerOrigin( *title );
   title->setPosition( winSize.x / 2.f, 100.f );
   mDrawObjects.push_back( std::move( title ) );
 
   auto nameText = std::make_unique<sf::Text>
-    ( "created by Sebastian 'SeriousITGuy' Brack",
-      getContext()->fonts->get( Fonts::DP_COMIC ), 24u );
+    ( Strings.creator, getContext()->fonts->get( Fonts::COMIC ), 24u );
   core::centerOrigin( *nameText );
   nameText->setPosition( winSize.x / 2.f, winSize.y - 30.f );
   mDrawObjects.push_back( std::move( nameText ) );
 
   mMenu.setHighlightColor( sf::Color::Green );
-  mMenu.add( "PLAY" );
-  mMenu.add( "OPTIONS" );
-  mMenu.add( "CREDITS" );
-  mMenu.add( "EXIT" );
+  mMenu.add( Strings.play );
+  mMenu.add( Strings.options );
+  mMenu.add( Strings.credits );
+  mMenu.add( Strings.exit );
   core::centerOrigin( mMenu );
   mMenu.setPosition( winSize / 2.f );
 }

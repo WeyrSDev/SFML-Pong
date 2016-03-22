@@ -15,24 +15,24 @@
 class Application
 {
 public:
-                    Application();
-  void              run();
+  Application();
+  void run();
 
 private:
-  void              handleInput();
-  void              update();
-  void              render();
-  bool              filterEvent( sf::Event::EventType eventType );
+  void handleInput();
+  void update();
+  void render();
+  bool filterEvent( sf::Event::EventType eventType );
 
-  sf::RenderWindow  mWindow;
-  core::LogSystem         mLog;
+  sf::RenderWindow mWindow;
+  core::LogSystem mLog;
   std::unique_ptr<core::FpsDisplay> mFpsDisplay;
-  core::TextureCache      mTextures;
-  core::FontCache         mFonts;
-  Blackboard        mBBoard;
-  core::Context           mContext;
-  core::StateStack        mStack;
-  sf::Time          mTimeStep;  
+  core::TextureCache mTextures;
+  core::FontCache mFonts;
+  Blackboard mBBoard;
+  core::Context mContext;
+  core::StateStack mStack;
+  sf::Time mTimeStep;  
 };
 
 #endif

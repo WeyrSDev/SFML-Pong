@@ -7,11 +7,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 
-GameBall::GameBall( core::Context context )
-  : mContext( &context )
-  , mSprite()
+GameBall::GameBall( core::Context* context )
+  : core::Entity{ context }
+  , mSprite{}
 {
-  mSprite.setTexture( mContext->textures->get( Textures::TILES ) );
+  mSprite.setTexture( mContext->textures->get(Textures::TILES) );
   mSprite.setTextureRect( sf::IntRect { 32,0,16,16 } );
 }
 
@@ -38,9 +38,8 @@ sf::FloatRect GameBall::getGlobalBounds() const
 
 ///////////////////////////////////////////////////////////////////////////////
 
-void GameBall::draw( sf::RenderTarget& target, sf::RenderStates states ) const
-{
-  states.transform *= getTransform();
+void GameBall::drawCurrent( sf::RenderTarget& target, sf::RenderStates states ) const
+{  
   target.draw( mSprite, states );
 }
 

@@ -10,6 +10,7 @@
 #include <type_traits>
 #include <fstream>
 #include <iostream>
+#include <string>
 
 // provides utility functions and classes
 namespace core
@@ -50,7 +51,7 @@ std::string eventToString( sf::Event::EventType type );
 
 // take a screenshot of the given RenderWindow instance and
 // save it to file asynchronously using C++11 threads
-void makeScreenshot( const sf::RenderWindow& window );
+void makeScreenshot( const sf::RenderWindow& window, std::string filePrefix );
 
 // return position (as upper left corner) of an sf::Rect as sf::Vector for convenience
 template<typename T>
@@ -68,7 +69,16 @@ std::string to_string( const sf::Rect<T>& rectangle );
 template<typename T>
 std::string dumpToString( const T& t );
 
+// return a string rep of a float fixed to given number of digits
+// digits defaults to 1 and is limited between 0 and 10
+std::string floatToString( float value, unsigned int digits = 1u );
+
+// return a string representation of current day and time
+// defaults to human readably dd-mm-yy HH:MM:SS format
+std::string getDayTime( char* format = "%d-%m-%y %H:%M:%S" );
+
 #include "Utility.inl"
 
-} // end namespace core
-#endif
+} // core
+
+#endif // CORE_UTILITY_HPP

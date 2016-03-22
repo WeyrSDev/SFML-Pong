@@ -18,6 +18,7 @@ private:
   enum class MenuOption : unsigned int
   {
     RESUME = 0u,
+    RESTART,
     EXIT_MENU,
     EXIT,
   };

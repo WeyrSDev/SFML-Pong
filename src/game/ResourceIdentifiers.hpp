@@ -16,10 +16,8 @@ enum class Textures : unsigned short
 enum class Fonts : unsigned short
 {
   MONOSPACE = 0u,
-  SDS_8BIT,
-  C64_Pixel,
-  DP_COMIC,
-  X7X5_PIXEL,
+  C64,
+  COMIC,
 };
 
 // add your music identifiers here

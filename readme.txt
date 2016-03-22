@@ -15,6 +15,16 @@ Release build is more quiet regarding console output.
 ===============================================================================
 Changelog:
 
+Build 13:
+ - Added base entity class with debug drawing capabilities
+ - Added 'Restart' option to pause state
+ - Added date time functions to core
+ - Screenshot's now include date and time in file names, no overwriting anymore
+ - Added timestamp to log system
+ - Refactored collision model and physics handling
+ - Removed 'add friction on collision', new reflection model is missing
+ - Removed unnecessary fonts
+
 Build 12:
  - changed game entities from OpenGL primitives to real graphics
  - Heavily tweaked logging system
@@ -45,8 +55,7 @@ Up   : Move paddle up
 Down : Move paddle down
 ESC  : Goto pause screen
 F12  : Capture screenshot
-       (defaults to "screenshot.png" so new shots overwrite old)
-
+       
 In debug build the following controls are enabled:
 
 F1   : Toggle debug info display

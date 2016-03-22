@@ -18,17 +18,21 @@ public:
     Computer,
   };
 
-  Paddle( Type type, core::Context context );
-  void setColor( const sf::Color& color ) override;
-  sf::FloatRect getLocalBounds() const override;
-  sf::FloatRect getGlobalBounds() const override;
+  Paddle( Type type, core::Context* context );
+  void setColor( const sf::Color& color );
+  void setSpeed( float speed );
+  float getSpeed() const;
+  float getBaseSpeed() const;
+  virtual sf::FloatRect getLocalBounds() const override;
+  virtual sf::FloatRect getGlobalBounds() const override;
 
 private:
-  virtual void draw( sf::RenderTarget& target, sf::RenderStates states ) const override;
+  virtual void drawCurrent( sf::RenderTarget& target, sf::RenderStates states ) const override;
 
   Type mType;
-  const core::Context* mContext;
-  sf::Sprite mSprite;  
+  sf::Sprite mSprite;
+  float mBaseSpeed;
+  float mCurrentSpeed;
 };
 
 

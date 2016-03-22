@@ -21,17 +21,20 @@ public:
   void render();
 
 private:
+  void handleCollisions( const sf::Time& dt );
+  void updateEntities( const sf::Time& dt );
+  void checkForScoring();
+  void checkForGameover();
   void setScoreString();
   void resetGameBall();
 #ifdef _DEBUG
-  void setDebugInfo( sf::Time dt );
+  void setDebugInfo();
 #endif
 
   core::Context mContext;
   sf::Vector2f mWinSize;
   Paddle mPlayer;
   Paddle mEnemy;
-  //sf::CircleShape mGameBall;
   GameBall mGameBall;
   bool mMoveUp;
   bool mMoveDown;
@@ -45,9 +48,12 @@ private:
   unsigned int mPlayerScore;
   unsigned int mEnemyScore;
   sf::Text mScoreText;
+  sf::Time mBallTime;
   sf::Time mGameTime;
+  sf::Time mDT;
   unsigned int mWinScore;
-  
+  float mScaleFactor;
+
 #ifdef _DEBUG
   bool mSingleFrameStep;
   bool mSingleFrameMode;
