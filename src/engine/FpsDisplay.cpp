@@ -7,11 +7,12 @@
 namespace core
 {
 // Hidden implementation class of FpsDisplay
-// constructor must be called by contructor of FpsDisplay
+// constructor must be called by constructor of FpsDisplay
 class FpsDisplay::Impl
 {
 public:
   Impl( const sf::Font& font, unsigned int size );
+  //~Impl();
   void update( const sf::Time dt );
 
   sf::Text mFpsText;
@@ -28,6 +29,8 @@ FpsDisplay::Impl::Impl( const sf::Font& font, unsigned int size )
   , mFrames( 0 )
   , mFps( 0 )  
 {}
+
+  //FpsDisplay::Impl::~Impl() { }
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -54,8 +57,8 @@ FpsDisplay::FpsDisplay( const sf::Font& font, unsigned int size )
 
 // explicit default destructor is needed that the unique_ptr-member
 // can be deconstructed, defaulting doesn't work here
-//FpsDisplay::~FpsDisplay()
-//{}
+FpsDisplay::~FpsDisplay()
+{}
 
 ///////////////////////////////////////////////////////////////////////////////
 

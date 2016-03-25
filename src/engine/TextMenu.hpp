@@ -81,9 +81,9 @@ private:
   // unique_ptr to private implementation
   std::unique_ptr<Impl> mImpl;
 
-  // deleted copy contructor
+  // delete copy constructor
   TextMenu( const TextMenu& ) = delete;
-  // deleted copy assignment operator
+  // delete copy assignment operator
   TextMenu& operator=( const TextMenu& ) = delete;
 };
 

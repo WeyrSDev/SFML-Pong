@@ -26,7 +26,7 @@ public:
   FpsDisplay( const sf::Font& font, unsigned int size = 12u );
 
   // explicit default deconstructor needed cause of unique_ptr-member
-  ~FpsDisplay() = default;
+  ~FpsDisplay();
 
   // update with a valid sf::Time object
   // needs to be called every frame of the sfml window
@@ -42,10 +42,10 @@ private:
   // unique_ptr to private implementation
   std::unique_ptr<Impl> mImpl;
 
-  // deleted copy constructor
+  // delete copy constructor
   FpsDisplay( const FpsDisplay& ) = delete;
 
-  // deleted copy assignment operatr
+  // delete copy assignment operator
   FpsDisplay& operator=( const FpsDisplay& ) = delete;
 };
 

@@ -11,7 +11,7 @@ void ResourceCache<Resource, Identifier>::load( Identifier id, const sf::String&
   }
   // If loading successful, insert resource to map
   insertResource( id, std::move( resource ) );
-  mLog->write( "Successfully loaded resource " + filename + " into cache", LogType::DEBUG );
+  //mLog->write( "Successfully loaded resource " + filename + " into cache", LogType::DEBUG );
 }
 
 template <typename Resource, typename Identifier>
@@ -28,7 +28,7 @@ void ResourceCache<Resource, Identifier>::load( Identifier id, const sf::String&
 
   // If loading successful, insert resource to map
   insertResource( id, std::move( resource ) );
-  mLog->write( "Successfully loaded resource " + filename + " into cache", LogType::DEBUG );
+  //mLog->write( "Successfully loaded resource " + filename + " into cache", LogType::DEBUG );
 }
 
 template <typename Resource, typename Identifier>

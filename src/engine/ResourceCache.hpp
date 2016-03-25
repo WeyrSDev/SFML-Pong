@@ -18,8 +18,8 @@ public:
     : mLog( log )
   {
     if( mLog != nullptr ) {
-      mLog->write( "Starting Resource Cache for " + std::string( typeid( Resource ).name() ),
-                   LogType::DEBUG );
+//      mLog->write( "Starting Resource Cache for " + std::string( typeid( Resource ).name() ),
+//                   LogType::DEBUG );
     }
   }
 

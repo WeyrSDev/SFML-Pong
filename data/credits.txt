@@ -4,7 +4,7 @@ created by Sebastian 'SeriousITGuy' Brack
 (c) 2015 - 2016
 
 Build with Visual Studio 2015 on Windows 7
-and with CodeBlocks 13.12 / GCC 5.1 on Ubuntu 15.10.
+and with CLion 1.2 / GCC 5.2 on Ubuntu 15.10
 
 Written in C++14 with SFML 2.3.2
 SFML - Copyright (C) 2007-2015 Laurent Gomila - www.sfml-dev.org

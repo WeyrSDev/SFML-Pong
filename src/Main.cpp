@@ -1,6 +1,6 @@
 #include <game/Application.hpp>
-#include <iostream>
-#include <stdexcept>
+//#include <iostream>
+//#include <stdexcept>
 
 int main()
 {
