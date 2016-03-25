@@ -1,13 +1,12 @@
 #include "Utility.hpp"
 #include <SFML/Graphics/Texture.hpp>
-#include <ctime>
-#include <random>
+//#include <ctime>
+//#include <random>
 #include <cassert>
 #include <thread>
 #include <sstream>
 #include <iomanip>
-#include <chrono>
-#include <ctime>
+//#include <chrono>
 
 namespace core
 {
@@ -167,7 +166,7 @@ std::string floatToString( float value, unsigned int digits )
 
 ///////////////////////////////////////////////////////////////////////////////
 
-std::string getDayTime( char* format )
+std::string getDayTime( const char* format )
 {
   // this function uses plain old C in combination with C++11 std::chrono
   // TODO: should be replaced with something based on Hinnants C++ Date lib
