@@ -7,7 +7,8 @@ See license.txt for more information.
 Pong clone written in C++14 with SFML 2.3.2
 
 Build with Visual Studio 2015 on Windows 7
-and with CLion 1.2 / GCC 5.2 on Ubuntu 15.10
+and with CLion 2016.1 / GCC 5.2 on Ubuntu 15.10
+
 ===============================================================================
 
 Annotations:

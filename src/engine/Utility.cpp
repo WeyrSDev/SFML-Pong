@@ -1,12 +1,21 @@
 #include "Utility.hpp"
 #include <SFML/Graphics/Texture.hpp>
 //#include <ctime>
-//#include <random>
+#include <random>
 #include <cassert>
-#include <thread>
 #include <sstream>
 #include <iomanip>
-//#include <chrono>
+#include <chrono>
+
+#if defined(_WIN32) && defined(_MSC_VER)
+#include <thread>
+#define STD_THREAD 1
+#elif defined(_WIN32) && defined(__MINGW32__)
+// here needs to be an include for mingw posix thread implementation
+#elif defined(__LINUX__)
+#include <thread>
+#define STD_THREAD 1
+#endif
 
 namespace core
 {
@@ -146,9 +155,10 @@ void makeScreenshot( const sf::RenderWindow& window, std::string filePrefix )
   std::string filename = filePrefix + getDayTime( "-%d%m%y-%H%M%S" ) + ".png";
 
   // save it to file in another thread for no performance hit in main thread
+  #ifdef STD_THREAD
   std::thread t( [ img,filename ]() { img.saveToFile( filename ); } );
   t.detach();
-
+  #endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////

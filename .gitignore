@@ -3,4 +3,5 @@ msvc
 linux
 build
 bin
+bin-mingw
 .idea
