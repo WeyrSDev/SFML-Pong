@@ -1,9 +1,8 @@
 #ifndef CORE_STATESTACK_HPP
 #define CORE_STATESTACK_HPP
 
-#include "Context.hpp"
 #include "State.hpp"
-#include "Utility.hpp"
+//#include "Utility.hpp"
 #include <SFML/System/Time.hpp>
 #include <SFML/Window/Event.hpp>
 #include <vector>
@@ -13,6 +12,8 @@
 
 namespace core
 {
+
+struct Context;
 
 class StateStack
 {

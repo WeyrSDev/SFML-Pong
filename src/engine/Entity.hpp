@@ -1,7 +1,7 @@
 #ifndef CORE_ENTITY_HPP
 #define CORE_ENTITY_HPP
 
-#include "Context.hpp"
+//#include "Context.hpp"
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/Color.hpp>
@@ -10,6 +10,8 @@
 
 namespace core
 {
+
+struct Context;
 
 // base class for game entities
 class Entity : public sf::Drawable, public sf::Transformable

@@ -1,8 +1,9 @@
 #include "StateStack.hpp"
-#include "Utility.hpp"
+#include "Context.hpp"
+//#include "Utility.hpp"
 #include "LogSystem.hpp"
 #include <cassert>
-#include <algorithm>
+//#include <algorithm>
 
 namespace core
 {
