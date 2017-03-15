@@ -1,22 +1,20 @@
 #include "MusicPlayer.hpp"
+#include "Context.hpp"
 
-MusicPlayer::MusicPlayer()
+namespace core {
+
+MusicPlayer::MusicPlayer( Context* context )
   : mMusic()
-  , mMusicFiles()
   , mVolume( 100u )
-{
-  // SIC adding files in the player class itself couples it with the content
-  // music files must be stored outside the player and only be referenced here
-  //mMusicFiles[ Music::MENU_THEME ] = "";
-  //mMusicFiles[ Music::GAME_THEME ] = "";
+  , mContext( context )
+{}
 
-}
+void MusicPlayer::play( Music theme ) {
+  //std::string file = mMusicFiles[ theme ];
 
-void MusicPlayer::play( Music theme )
-{
-  std::string file = mMusicFiles[ theme ];
+  std::string file = mContext->music->find( theme )->second;
 
-  if( !mMusic.openFromFile( file ) ) {
+  if( !mMusic.openFromFile( file )) {
     throw std::runtime_error( "" );
   }
 
@@ -25,22 +23,24 @@ void MusicPlayer::play( Music theme )
   mMusic.play();
 }
 
-void MusicPlayer::stop()
-{
+void MusicPlayer::stop() {
   mMusic.stop();
 }
 
-void MusicPlayer::pause()
-{
+void MusicPlayer::pause() {
   mMusic.pause();
 }
 
-void MusicPlayer::resume()
-{
+void MusicPlayer::resume() {
   mMusic.play();
 }
 
-void MusicPlayer::setVolume( const float volume )
-{
+void MusicPlayer::setVolume( float volume ) {
+  if( volume > 100.f ){
+    volume = 100.f;
+  }
+
   mVolume = volume;
 }
+
+} // end namespace core

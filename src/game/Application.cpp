@@ -6,7 +6,7 @@
 #include <states/PauseState.hpp>
 #include <states/GameoverState.hpp>
 #include <states/CreditState.hpp>
-#include <SFML/Window/Event.hpp>
+//#include <SFML/Window/Event.hpp>
 //#include <iostream>
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -30,8 +30,9 @@ Application::Application()
   , mFpsDisplay( nullptr )
   , mTextures( &mLog )
   , mFonts( &mLog )
+  , mMusic()
   , mBBoard()
-  , mContext( mWindow, mTextures, mFonts, mBBoard, mLog )
+  , mContext( mWindow, mTextures, mFonts, mMusic, mBBoard, mLog )
   , mStack( mContext )
   , mTimeStep( sf::seconds( 1.f / 60.f ) )  
 {
@@ -47,6 +48,8 @@ Application::Application()
   mFonts.load( Fonts::MONOSPACE, "../data/fonts/DejaVuSansMono.ttf" );
   mFonts.load( Fonts::C64, "../data/fonts/C64-Pixel.ttf" );  
   mFonts.load( Fonts::COMIC, "../data/fonts/dpcomic.ttf" );
+  mMusic[Music::MENU_THEME]="../data/sfx/blast_off.ogg";
+  mMusic[Music::GAME_THEME]="../data/sfx/";
 
   mBBoard.keyEventType = sf::Event::EventType::KeyReleased;
   mLog.write( "keyEventType set to " + core::eventToString( mBBoard.keyEventType ),

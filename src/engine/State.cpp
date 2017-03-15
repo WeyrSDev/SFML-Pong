@@ -1,7 +1,8 @@
 #include "State.hpp"
 #include "StateStack.hpp"
-#include "Utility.hpp"
+//#include "Utility.hpp"
 #include "LogSystem.hpp"
+#include "Context.hpp"
 
 namespace core
 {

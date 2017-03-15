@@ -24,15 +24,16 @@ private:
   void render();
   bool filterEvent( sf::Event::EventType eventType );
 
-  sf::RenderWindow mWindow;
-  core::LogSystem mLog;
-  std::unique_ptr<core::FpsDisplay> mFpsDisplay;
-  core::TextureCache mTextures;
-  core::FontCache mFonts;
-  Blackboard mBBoard;
-  core::Context mContext;
-  core::StateStack mStack;
-  sf::Time mTimeStep;  
+  sf::RenderWindow                    mWindow;
+  core::LogSystem                     mLog;
+  std::unique_ptr<core::FpsDisplay>   mFpsDisplay;
+  core::TextureCache                  mTextures;
+  core::FontCache                     mFonts;
+  core::MusicCache                    mMusic;
+  Blackboard                          mBBoard;
+  core::Context                       mContext;
+  core::StateStack                    mStack;
+  sf::Time                            mTimeStep;
 };
 
 #endif
