@@ -158,6 +158,8 @@ void makeScreenshot( const sf::RenderWindow& window, std::string filePrefix )
   #ifdef STD_THREAD
   std::thread t( [ img,filename ]() { img.saveToFile( filename ); } );
   t.detach();
+  #else
+  img.saveToFile( filename );
   #endif
 }
 

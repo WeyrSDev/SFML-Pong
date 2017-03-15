@@ -1,45 +1,43 @@
 #include "GameWorld.hpp"
 #include <engine/Utility.hpp>
-#include <engine/Context.hpp>
 #include <game/Blackboard.hpp>
 #include <game/ResourceIdentifiers.hpp>
 #include <engine/ResourceCache.hpp>
 #include <engine/LogSystem.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 
 GameWorld::GameWorld( const core::Context& context )
   : mContext( context )
-  , mWinSize()
-  , mPlayer( Paddle::Type::Player, &mContext )
-  , mEnemy( Paddle::Type::Computer, &mContext )
-  , mGameBall( &mContext )
-  , mMoveUp( false )
-  , mMoveDown( false )
-  , mPlayerSpeed( 200.f )
-  , mBallAngle( 0 )
-  , mBallStartSpeed( 200.f )
-  , mBallSpeed( mBallStartSpeed )
-  , mOldBallSpeed( 0.f )
-  , mBallAcceleration( 25.f )
-  , mEnemySpeed( 200.f )
-  , mPlayerScore( 0u )
-  , mEnemyScore( 0u )
-  , mScoreText()
-  , mBallTime( sf::Time::Zero )
-  , mGameTime( sf::Time::Zero )
-  , mDT( sf::Time::Zero )
-  , mWinScore( 100u )
-  , mScaleFactor( 1.5f )
-  #ifdef _DEBUG
+    , mWinSize()
+    , mPlayer( Paddle::Type::Player, &mContext )
+    , mEnemy( Paddle::Type::Computer, &mContext )
+    , mGameBall( &mContext )
+    , mMoveUp( false )
+    , mMoveDown( false )
+    , mPlayerSpeed( 200.f )
+    , mBallAngle( 0 )
+    , mBallStartSpeed( 200.f )
+    , mBallSpeed( mBallStartSpeed )
+    , mOldBallSpeed( 0.f )
+    , mBallAcceleration( 25.f )
+    , mEnemySpeed( 200.f )
+    , mPlayerScore( 0u )
+    , mEnemyScore( 0u )
+    , mScoreText()
+    , mBallTime( sf::Time::Zero )
+    , mGameTime( sf::Time::Zero )
+    , mDT( sf::Time::Zero )
+    , mWinScore( 100u )
+    , mScaleFactor( 1.5f )
+#ifdef _DEBUG
   , mStopBallMove( false )
-  , mSingleFrameStep( false )
-  , mSingleFrameMode( false )
-  , mShowDebugInfo( true )
-  , mDebugInfo()
-  , mDebugTimer( sf::Time::Zero )
-  #endif
+    , mSingleFrameStep( false )
+    , mSingleFrameMode( false )
+    , mShowDebugInfo( true )
+    , mDebugInfo()
+    , mDebugTimer( sf::Time::Zero )
+#endif
 {
   mWinSize = { static_cast<float>( context.window->getSize().x ),
                static_cast<float>( context.window->getSize().y ) };
@@ -65,7 +63,7 @@ GameWorld::GameWorld( const core::Context& context )
   core::centerOrigin( mScoreText );
   mScoreText.setPosition( mWinSize.x / 2.f, mScoreText.getOrigin().y + 5.f );
 
-  #ifdef _DEBUG
+#ifdef _DEBUG
   mDebugInfo.setFont( mContext.fonts->get( Fonts::MONOSPACE ) );
   mDebugInfo.setCharacterSize( 8u );
   mDebugInfo.setPosition( 15.f, mWinSize.y - 15.f );
@@ -75,7 +73,7 @@ GameWorld::GameWorld( const core::Context& context )
                        core::LogType::DEBUG );
   mContext.log->write( "Debug dump of enemy variables\n" + core::dumpToString( mEnemy ),
                        core::LogType::DEBUG );
-  #endif
+#endif
 
   mContext.log->write( "GameWorld initialized successfully", core::LogType::DEBUG );
 }
@@ -85,7 +83,7 @@ GameWorld::GameWorld( const core::Context& context )
 void GameWorld::handleInput( const sf::Event& event )
 {
   if( event.type == mContext.blackboard->keyEventType ) {
-    #ifdef _DEBUG
+#ifdef _DEBUG
     if( event.key.code == sf::Keyboard::F1 ) {
       mShowDebugInfo = !mShowDebugInfo; // toggle debug draw on/off
       mContext.log->write( "Show debug info set to " + std::to_string( mShowDebugInfo ),
@@ -117,7 +115,7 @@ void GameWorld::handleInput( const sf::Event& event )
       mContext.blackboard->gameOver = true;
       mContext.log->write( "Insta loss triggered by user", core::LogType::DEBUG );
     }
-    #endif
+#endif
   }
 }
 
@@ -137,7 +135,7 @@ void GameWorld::handleRealtimeInput()
 
 void GameWorld::update( const sf::Time dt )
 {
-  #ifdef _DEBUG
+#ifdef _DEBUG
   // if debug info is to be shown, update it before hand
   if( mShowDebugInfo ) {
     setDebugInfo();
@@ -166,7 +164,7 @@ void GameWorld::update( const sf::Time dt )
   mEnemy.setDebugDraw( mShowDebugInfo );
   mGameBall.setDebugDraw( mShowDebugInfo );
 
-  #endif
+#endif
 
   mDT = dt;
   mBallTime += dt; // count the elapsed time of the played ball
@@ -202,11 +200,11 @@ void GameWorld::render()
   window.draw( mEnemy );
   window.draw( mGameBall );
 
-  #ifdef _DEBUG
+#ifdef _DEBUG
   if( mShowDebugInfo ) {
     window.draw( mDebugInfo );
   }
-  #endif
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -229,16 +227,16 @@ void GameWorld::handleCollisions( const sf::Time& dt )
     mBallAngle = 360 - mBallAngle;
   }
 
-  // ball - bottom collision
-  // if bottom is greater than window size, flip the y-coord of ball velocity vector
+    // ball - bottom collision
+    // if bottom is greater than window size, flip the y-coord of ball velocity vector
   else if( ballBotY > mWinSize.y ) {
-    ballVelocity.y = - ( ballBotY - mWinSize.y );
+    ballVelocity.y = -( ballBotY - mWinSize.y );
     mContext.log->write( std::to_string( ballVelocity.y ), core::LogType::DEBUG );
     mGameBall.setVelocity( ballVelocity );
     mBallAngle = 360 - mBallAngle;
   }
 
-  // ball - left paddle collision
+    // ball - left paddle collision
   else if( ballGBounds.intersects( mPlayer.getGlobalBounds() )
            && mBallAngle > 90 && mBallAngle < 270 ) {
     auto newBallX = playerGBounds.left + playerGBounds.width + ballRadius;
@@ -247,7 +245,7 @@ void GameWorld::handleCollisions( const sf::Time& dt )
     mBallSpeed += mBallAcceleration;
   }
 
-  // ball - right paddle collision
+    // ball - right paddle collision
   else if( ballGBounds.intersects( mEnemy.getGlobalBounds() ) ) {
     auto newBallX = mEnemy.getGlobalBounds().left - ballRadius;
     mGameBall.setPosition( newBallX, mGameBall.getPosition().y );
@@ -290,7 +288,7 @@ void GameWorld::handleCollisions( const sf::Time& dt )
   const auto enemyGBounds = mEnemy.getGlobalBounds();
   if( mGameBall.getPosition().y < mEnemy.getPosition().y ) {
     if( enemyGBounds.top - enemyYVelocity <= 0.f ) {
-      mEnemy.setVelocity( sf::Vector2f{ 0.f,-enemyGBounds.top } );
+      mEnemy.setVelocity( sf::Vector2f{ 0.f, -enemyGBounds.top } );
     } else {
       mEnemy.setVelocity( sf::Vector2f{ 0.f, -enemyYVelocity } );
     }
@@ -315,69 +313,6 @@ void GameWorld::updateEntities( const sf::Time& dt )
 }
 
 /////////////////////////////////////////////////////////////////////////////////
-//
-//void GameWorld::movePlayer()
-//{
-//  // move player paddle
-//  // pre calculate the target of movement before actual movement
-//  // to make correct collision detection with top and bottom of window
-//  auto playerMove = mPlayerSpeed * mDT.asSeconds(); // always positive value
-//  const auto playerGBounds = mPlayer.getGlobalBounds();
-//
-//  if( mMoveUp ) {
-//    playerMove = -playerMove; // negate to simulate upper movement
-//    //mContext.log->write( "playerMove=" + std::to_string( playerMove ), core::LogType::DEBUG );
-//    if( playerGBounds.top + playerMove <= 0.f ) {
-//      mPlayer.move( 0.f, -playerGBounds.top );
-//      mMoveUp = false;
-//    } else {
-//      mPlayer.move( 0.f, playerMove );
-//      mMoveUp = false;
-//    }
-//  }
-//  if( mMoveDown ) {
-//    //mContext.log->write( "playerMove=" + std::to_string( playerMove ), core::LogType::DEBUG );
-//    if( playerGBounds.top + playerGBounds.height >= mWinSize.y ) {
-//      auto curYDistance = mWinSize.y - ( playerGBounds.top
-//                                         + playerGBounds.height );
-//      mPlayer.move( 0.f, curYDistance );
-//      mMoveDown = false;
-//    } else {
-//      mPlayer.move( 0.f, playerMove );
-//      mMoveDown = false;
-//    }
-//  }
-//}
-//
-/////////////////////////////////////////////////////////////////////////////////
-//
-//void GameWorld::moveEnemy()
-//{
-//  // move enemy paddle
-//  // same pre calculation as for player paddle
-//  // movement depends on ball position
-//  // possible alternative is to move paddle to center when
-//  // ball flies in players direction
-//  auto enemyMove = mEnemySpeed * mDT.asSeconds();
-//  const auto enemyGBounds = mEnemy.getGlobalBounds();
-//  if( mGameBall.getPosition().y < mEnemy.getPosition().y ) {
-//    if( enemyGBounds.top - enemyMove <= 0.f ) {
-//      mEnemy.move( 0.f, -enemyGBounds.top );
-//    } else {
-//      mEnemy.move( 0.f, -enemyMove );
-//    }
-//  }
-//  if( mGameBall.getPosition().y > mEnemy.getPosition().y ) {
-//    if( enemyGBounds.top + enemyGBounds.height >= mWinSize.y ) {
-//      mEnemy.move( 0.f, mWinSize.y - ( enemyGBounds.top
-//                   + enemyGBounds.height ) );
-//    } else {
-//      mEnemy.move( 0.f, enemyMove );
-//    }
-//  }
-//}
-//
-///////////////////////////////////////////////////////////////////////////////
 
 void GameWorld::checkForScoring()
 {
@@ -452,6 +387,7 @@ void GameWorld::resetGameBall()
 ///////////////////////////////////////////////////////////////////////////////
 
 #ifdef _DEBUG
+
 void GameWorld::setDebugInfo()
 {
   mDebugTimer += mDT;
@@ -461,7 +397,7 @@ void GameWorld::setDebugInfo()
                           + "\tball angle: " + std::to_string( mBallAngle ) + "\n"
                           + "ball time: " + core::floatToString( mBallTime.asSeconds() )
                           + "\tgame time: " + core::floatToString( mGameTime.asSeconds() )
-                          );
+    );
 
 
     // set origin to lower left corner
@@ -470,6 +406,7 @@ void GameWorld::setDebugInfo()
     mDebugTimer = sf::Time::Zero;
   }
 }
+
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////

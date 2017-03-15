@@ -29,7 +29,6 @@ void LogSystem::write( sf::String msg, LogType logType )
   }
 
   std::string val;
-  // TODO: add timestamp to val
   switch( logType ) {
     case LogType::INFO:
       val = "[INFO]\t";
@@ -49,6 +48,9 @@ void LogSystem::write( sf::String msg, LogType logType )
 
     case LogType::FATAL:
       val = "[FATAL]\t";
+      break;
+
+    case LogType::NONE:
       break;
   }
   val += getDayTime( "%H:%M:%S\t" );
